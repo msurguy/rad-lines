@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="paper">
     <input type="range" min="1" max="100" name="numPolygons" v-model="numPolygons">
     <button @click.prevent="downloadSVG">Download SVG</button>
     <svg ref="renderedPolygons" width="400" height="400" title="polygons" version="1.1" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
@@ -81,5 +81,7 @@ export default {
 </script>
 
 <style scoped>
-
+.paper {
+  display: block;
+}
 </style>

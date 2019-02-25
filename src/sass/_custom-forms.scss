@@ -498,6 +498,21 @@
       background-color: $custom-range-thumb-disabled-bg;
     }
   }
+
+  //&:hover::-webkit-slider-runnable-track{
+  //  background-image: linear-gradient(-270deg, #fad961 0%, #f76b1c 100%);
+  //}
+  &:focus::-webkit-slider-runnable-track{
+    background-image: linear-gradient(-270deg, #fad961 0%, #f76b1c 100%);
+  }
+
+  //input[type="range"]:hover::-webkit-slider-runnable-track {
+  //  //background: #f8813e;
+  //  background-image: linear-gradient(-270deg, #fad961 0%, #f76b1c 100%);
+  //}
+  //input[type="range"]:focus::-webkit-slider-runnable-track {
+  //  background-image: linear-gradient(-270deg, #fad961 0%, #f76b1c 100%);
+  //}
 }
 
 .custom-control-label::before,
