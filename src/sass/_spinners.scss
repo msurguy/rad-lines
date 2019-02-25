@@ -1,0 +1,134 @@
+//
+// Rotating border
+//
+
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-border {
+  display: inline-block;
+  width: $spinner-width;
+  height: $spinner-height;
+  vertical-align: text-bottom;
+  border: $spinner-border-width solid currentColor;
+  border-right-color: transparent;
+  // stylelint-disable-next-line property-blacklist
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+}
+
+.spinner-border-sm {
+  width: $spinner-width-sm;
+  height: $spinner-height-sm;
+  border-width: $spinner-border-width-sm;
+}
+
+//
+// Growing circle
+//
+
+@keyframes spinner-grow {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.spinner-grow {
+  display: inline-block;
+  width: $spinner-width;
+  height: $spinner-height;
+  vertical-align: text-bottom;
+  background-color: currentColor;
+  // stylelint-disable-next-line property-blacklist
+  border-radius: 50%;
+  opacity: 0;
+  animation: spinner-grow .75s linear infinite;
+}
+
+.spinner-grow-sm {
+  width: $spinner-width-sm;
+  height: $spinner-height-sm;
+}
+
+@keyframes circle_dashes {
+  0% {
+    stroke-dashoffset: 146px;
+  }
+  3% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes circle_rotate {
+  0% {
+    transform: rotate(-90deg) translate(-50px, -50px);
+  }
+  5% {
+    transform: rotate(-90deg) translate(-50px, -50px);
+  }
+  100% {
+    transform: rotate(3600deg) translate(-50px, -50px);
+  }
+}
+@keyframes dashes_gaps {
+  0% {
+    stroke-dasharray: 146px;
+  }
+  3% {
+    stroke-dasharray: 146px;
+  }
+  5% {
+    stroke-dasharray: 12;
+  }
+  97% {
+    stroke-dasharray: 12;
+  }
+  100% {
+    stroke-dasharray: 146px;
+  }
+}
+
+.spinner-dash {
+  display: inline-block;
+
+  svg * {
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0, 0, 1, 1);
+
+    circle {
+      fill: none;
+      stroke: rgb(255, 216, 17);
+      stroke-miterlimit: 3;
+      stroke-width: 3px;
+      animation-fill-mode: backwards, backwards;
+      animation-name: circle_dashes, dashes_gaps, circle_rotate;
+      animation-timing-function: cubic-bezier(0, 0, 1, 1), cubic-bezier(0, 0, 1, 1), cubic-bezier(0, 0, 1, 1);
+      stroke-dasharray: 146;
+      stroke-dashoffset: 146px;
+    }
+  }
+
+  svg g {
+      animation-fill-mode: backwards;
+      transform: translate(25px, 25px);
+  }
+}
+
+.spinner-lg, .spinner-lg svg {
+  width: 48px;
+  height: 48px;
+}
+
+.spinner-md, .spinner-md svg {
+  width: 36px;
+  height: 36px;
+}
+
+.spinner-sm, .spinner-sm svg {
+  width: 24px;
+  height: 24px;
+}
