@@ -52,6 +52,14 @@ export default {
     return {
       num: this.defaultValue
     }
+  },
+  mounted () {
+    this.$emit('update:num', this.num)
+  },
+  watch: {
+    num (value) {
+      this.$emit('update:num', value)
+    }
   }
 }
 </script>

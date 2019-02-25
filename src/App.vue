@@ -4,7 +4,9 @@
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
       <div class="sidebar-heading text-center"><h2>Twisted Polygons</h2></div>
-      <slider :min="100" :max="255" label="MyLabel" :default-value="150"></slider>
+      <slider :left-icon="require(`@/icons/triangle-small-01.svg`)" :right-icon="require(`@/icons/triangle-small-01.svg`)" :min="100" :max="255" label="MyLabel" :default-value="defaultFrequency"  v-bind:num.sync="frequency"></slider>
+      <slider :left-icon="require(`@/icons/triangle-small-01.svg`)" :right-icon="require(`@/icons/triangle-small-01.svg`)" :min="100" :max="255" label="MyLabel" :default-value="defaultFrequency"  v-bind:num.sync="frequency"></slider>
+      <slider :left-icon="require(`@/icons/triangle-small-01.svg`)" :right-icon="require(`@/icons/triangle-small-01.svg`)" :min="100" :max="255" label="MyLabel" :default-value="defaultFrequency"  v-bind:num.sync="frequency"></slider>
     </div>
     <!-- /#sidebar-wrapper -->
 
@@ -33,7 +35,9 @@ export default {
   },
   data () {
     return {
-      settings: {}
+      settings: {},
+      defaultFrequency: 150,
+      frequency: null
     }
   }
 }
