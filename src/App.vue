@@ -8,6 +8,8 @@
       <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
       <slider :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
       <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
+      <input type="text" v-model.lazy="scaleFormula">
+      <input type="text" v-model.lazy="rotationFormula">
       <div class="container mt-3">
         <div class="row">
           <div class="col-12">
@@ -24,7 +26,8 @@
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <div id="paper">
-          <Polygons :start-angle="startAngle.value" :radius="radius.value" :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value"></Polygons>
+          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :radius="radius.value" :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value"></Polygons>
+
         </div>
       </div>
     </div>
@@ -46,6 +49,8 @@ export default {
   },
   data () {
     return {
+      scaleFormula: 'i+i*7',
+      rotationFormula: '10*Math.sin(i/9)',
       startAngle: {
         leftIcon: {
           icon: 'triangle',

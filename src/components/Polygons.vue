@@ -9,7 +9,7 @@
 </template>
 
 <script>
-/* eslint-disable standard/object-curly-even-spacing */
+/* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import { eventBus } from '@/main'
 import ClosedPolyline from './ClosedPolyline'
 
@@ -19,6 +19,14 @@ export default {
     ClosedPolyline
   },
   props: {
+    scaleFormula: {
+      type: String,
+      default: 'i*i/2'
+    },
+    rotationFormula: {
+      type: String,
+      default: '10 * Math.sin(i * Math.PI / 9)'
+    },
     width: {
       type: Number,
       default: 400
@@ -93,6 +101,12 @@ export default {
     },
     height () {
       this.generatePolygonData()
+    },
+    scaleFormula () {
+      this.generatePolygonData()
+    },
+    rotationFormula () {
+      this.generatePolygonData()
     }
   },
   methods: {
@@ -108,10 +122,61 @@ export default {
       }
       return arr
     },
+    scaleFunc (x) {
+      function generateFunc (form) {
+        return `function sizeEquation(i) {  return ${form}}`
+      }
+
+      function compileFunction (code) {
+        try {
+          let creator = new Function(code + '\n return sizeEquation')
+          let getSizeFunc = creator()
+          return getSizeFunc
+        } catch (e) {
+          // console.log(e)
+        }
+      }
+      try {
+        let myFunc = compileFunction(generateFunc(this.scaleFormula))
+        return myFunc(x)
+      } catch (e) {
+        // console.log(e)
+      }
+    },
+    rotationFunc (x) {
+      console.log('rotationFunc', this.rotationFormula)
+
+      function generateFunc (rotation) {
+        // console.log('rotationFunc', rotation)
+
+        return `function rotationEquation(i) {  return ${rotation}}`
+      }
+
+      function compileFunction (code) {
+        // console.log(code)
+        try {
+          let creator = new Function(code + '\n return rotationEquation')
+          let getRotationFunc = creator()
+          // console.log(getRotationFunc)
+
+          return getRotationFunc
+        } catch (e) {
+          // console.log(e)
+        }
+      }
+
+      try {
+        let myFunc = compileFunction(generateFunc(this.rotationFormula))
+        console.log(myFunc(x))
+        return myFunc(x)
+      } catch (e) {
+        // console.log(e)
+      }
+    },
     generatePolygonData () {
       this.polygons = []
       for (let i = 0; i < this.quantity; i++) {
-        this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + i * i / 2, this.startAngle + 10 * Math.sin(i * Math.PI / 9)))
+        this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
       }
     },
     downloadSVG () {
