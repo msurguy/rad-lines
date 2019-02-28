@@ -1,31 +1,33 @@
 <template>
   <div class="slider">
-    <div class="header">
+    <div class="slider-header">
       <div>
-        <img v-if="leftIcon" :src="leftIcon" width="12px" height="12px">
+        <svgicon v-if="leftIcon" :name="leftIcon.icon" :width="leftIcon.width" :height="leftIcon.height" color="#FFFFFF" :fill="false"></svgicon>
       </div>
-      <div class="label">
-        <div class="output">{{ num }}</div>{{ label }}
+      <div class="slider-label">
+        <div class="slider-output">
+          <input type="text" :value="value" @change="onInput">
+        </div>{{ label }}
       </div>
       <div>
-        <img v-if="rightIcon" :src="rightIcon" width="22px" height="22px">
+        <svgicon v-if="rightIcon" :name="rightIcon.icon" :width="rightIcon.width" :height="rightIcon.height" color="#FFFFFF" :fill="false"></svgicon>
       </div>
     </div>
-    <input class="custom-range" type="range" :min="min" :max="max" :step="step" v-model="num">
+    <input class="custom-range" type="range" :min="min" :max="max" :step="step" :value="value" @input="onInput">
   </div>
 </template>
 
 <script>
+import '@/icons'
+
 export default {
   name: 'Slider',
   props: {
     leftIcon: {
-      type: String,
-      default: ''
+      type: Object
     },
     rightIcon: {
-      type: String,
-      default: ''
+      type: Object
     },
     min: {
       type: Number,
@@ -43,22 +45,21 @@ export default {
       type: String,
       default: 'Label'
     },
-    defaultValue: {
+    value: {
       type: Number,
       default: 50
     }
   },
-  data () {
-    return {
-      num: this.defaultValue
-    }
-  },
-  mounted () {
-    this.$emit('update:num', this.num)
-  },
-  watch: {
-    num (value) {
-      this.$emit('update:num', value)
+  methods: {
+    onInput ($event) {
+      if ($event.target.value > this.min) {
+        this.$emit('input', $event.target.value)
+      } else {
+        this.$emit('input', this.min)
+      }
+      if ($event.target.value < this.min) {
+        this.$emit('input', this.min)
+      }
     }
   }
 }

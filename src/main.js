@@ -3,8 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import './sass/bootstrap.scss'
+import SvgIcon from 'vue-svgicon'
 
 Vue.config.productionTip = false
+
+// Default tag name is 'svgicon'
+Vue.use(SvgIcon, {
+  tagName: 'svgicon'
+})
 
 /* eslint-disable no-new */
 new Vue({

@@ -4,9 +4,9 @@
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
       <div class="sidebar-heading text-center"><h2>Twisted Polygons</h2></div>
-      <slider :left-icon="require(`@/icons/triangle-small-01.svg`)" :right-icon="require(`@/icons/triangle-small-01.svg`)" :min="100" :max="255" label="MyLabel" :default-value="defaultFrequency"  v-bind:num.sync="frequency"></slider>
-      <slider :left-icon="require(`@/icons/triangle-small-01.svg`)" :right-icon="require(`@/icons/triangle-small-01.svg`)" :min="100" :max="255" label="MyLabel" :default-value="defaultFrequency"  v-bind:num.sync="frequency"></slider>
-      <slider :left-icon="require(`@/icons/triangle-small-01.svg`)" :right-icon="require(`@/icons/triangle-small-01.svg`)" :min="100" :max="255" label="MyLabel" :default-value="defaultFrequency"  v-bind:num.sync="frequency"></slider>
+      <slider :left-icon="frequency.leftIcon" :right-icon="frequency.rightIcon" :min="100" :max="255" label="MyLabel" v-model.number="frequency.value"></slider>
+      <slider :left-icon="frequency.leftIcon" :right-icon="frequency.rightIcon" :min="100" :max="255" label="MyLabel" v-model.number="frequency.value"></slider>
+      <slider :left-icon="frequency.leftIcon" :right-icon="frequency.rightIcon" :step="0.1" :min="0" :max="1000" label="MyLabel" v-model.number="frequency.value"></slider>
     </div>
     <!-- /#sidebar-wrapper -->
 
@@ -35,9 +35,20 @@ export default {
   },
   data () {
     return {
-      settings: {},
-      defaultFrequency: 150,
-      frequency: null
+      frequency: {
+        default: 150,
+        leftIcon: {
+          icon: 'triangle',
+          width: '12',
+          height: '12'
+        },
+        rightIcon: {
+          icon: 'triangle',
+          width: '22',
+          height: '22'
+        },
+        value: 50
+      }
     }
   }
 }

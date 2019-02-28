@@ -520,3 +520,47 @@
 .custom-select {
   @include transition($custom-forms-transition);
 }
+
+.slider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 15px;
+  background-image: linear-gradient(-180deg, #2F2F2F 0%, #424242 100%);
+
+  .slider-header {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-items: flex-end;
+    align-items: flex-end;
+    justify-content: space-between;
+    min-height: 24px;
+  }
+
+  .custom-range {
+    flex: 1;
+  }
+
+  .slider-label {
+    line-height: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    font-family: monaco, Consolas, Lucida Console, monospace;
+    font-size: 12px;
+    color: #d2d2d2;
+  }
+
+  .slider-output input{
+    margin-right: 10px;
+    height: 20px;
+    width: 45px;
+    text-align: right;
+    background-color: #1d1d1d;
+    color: #d2d2d2;
+    font-size: 14px;
+    line-height: 20px;
+    border: none;
+  }
+}
