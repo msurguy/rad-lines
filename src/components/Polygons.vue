@@ -1,10 +1,8 @@
 <template>
   <div class="paper">
-    <input type="range" min="1" max="100" name="numPolygons" v-model="numPolygons">
-    <button @click.prevent="downloadSVG">Download SVG</button>
     <svg ref="renderedPolygons" width="400" height="400" title="polygons" version="1.1" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
       <g>
-        <closed-polyline v-for="(polygon, index) in polygons" :key="index" :lineData="polygon"></closed-polyline>
+        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon"></closed-polyline>
       </g>
     </svg>
   </div>
@@ -12,7 +10,7 @@
 
 <script>
 /* eslint-disable standard/object-curly-even-spacing */
-
+import { eventBus } from '@/main'
 import ClosedPolyline from './ClosedPolyline'
 
 export default {
@@ -20,15 +18,81 @@ export default {
   components: {
     ClosedPolyline
   },
-  data () {
-    return {
-      polygons: [],
-      numPolygons: 0
+  props: {
+    width: {
+      type: Number,
+      default: 400
+    },
+    height: {
+      type: Number,
+      default: 400
+    },
+    quantity: {
+      type: Number,
+      default: 10
+    },
+    sides: {
+      type: Number,
+      default: 5
+    },
+    roundness: {
+      type: Number,
+      default: 0.8
+    },
+    radius: {
+      type: Number,
+      default: 20
+    },
+    startAngle: {
+      type: Number,
+      default: 0
+    },
+    x: {
+      type: Number,
+      default: 200
+    },
+    y: {
+      type: Number,
+      default: 200
     }
   },
+  data () {
+    return {
+      polygons: []
+    }
+  },
+  created () {
+    eventBus.$on('download', () => {
+      this.downloadSVG()
+    })
+  },
   watch: {
-    numPolygons (howMany) {
-      this.generatePolygonData(howMany, 100, 100, 5, 50, 0)
+    x () {
+      this.generatePolygonData()
+    },
+    y () {
+      this.generatePolygonData()
+    },
+    startAngle () {
+      this.generatePolygonData()
+    },
+    radius () {
+      this.generatePolygonData()
+    },
+    roundness () {
+      this.generatePolygonData()
+    },
+    sides () {
+      this.generatePolygonData()
+    },
+    quantity () {
+      this.generatePolygonData()
+    },
+    width () {
+      this.generatePolygonData()
+    },
+    height () {
+      this.generatePolygonData()
     }
   },
   methods: {
@@ -44,10 +108,10 @@ export default {
       }
       return arr
     },
-    generatePolygonData (howmany, x, y, numSides, radius, startAngle) {
+    generatePolygonData () {
       this.polygons = []
-      for (let i = 0; i < howmany; i++) {
-        this.polygons.push(this.createPolygon(x, y, numSides, radius + i * i / 2, startAngle + 20 * Math.sin(i * Math.PI / 9)))
+      for (let i = 0; i < this.quantity; i++) {
+        this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + i * i / 2, this.startAngle + 10 * Math.sin(i * Math.PI / 9)))
       }
     },
     downloadSVG () {
@@ -59,6 +123,7 @@ export default {
       // reduce the SVG path by cutting off floating point values after the first digit beyond floating point (~50% less MBs)
       svgString = svgString.replace(/([+]?\d+\.\d{3,}([eE][+]?\d+)?)/g, (x) => (+x).toFixed(1)
       )
+      // remove Vue's data IDs
       svgString = svgString.replace(/ data-v-([0-9a-z]){8}=""/g, () => '')
 
       const blob = new Blob([svgDoctype + svgString], {type: 'image/svg+xml;charset=utf-8'})
@@ -75,7 +140,7 @@ export default {
     }
   },
   mounted () {
-    this.generatePolygonData(10, 100, 100, 5, 50, 0)
+    this.generatePolygonData()
   }
 }
 </script>

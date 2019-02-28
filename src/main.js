@@ -5,6 +5,8 @@ import App from './App'
 import './sass/bootstrap.scss'
 import SvgIcon from 'vue-svgicon'
 
+export const eventBus = new Vue()
+
 Vue.config.productionTip = false
 
 // Default tag name is 'svgicon'

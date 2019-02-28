@@ -7,9 +7,16 @@ import { line, curveCardinalClosed } from 'd3'
 
 export default {
   name: 'ClosedPolyline',
-  props: ['lineData'],
-  data () {
-    return {
+  props: {
+    lineData: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    roundness: {
+      type: Number,
+      default: 0.8
     }
   },
   computed: {
@@ -17,13 +24,9 @@ export default {
       const path = line()
         .x(d => d[0])
         .y(d => d[1])
-        .curve(curveCardinalClosed.tension(0.4))
+        .curve(curveCardinalClosed.tension(this.roundness))
       return path(this.lineData)
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>
