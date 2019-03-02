@@ -5,15 +5,16 @@
         <svgicon v-if="leftIcon" :name="leftIcon.icon" :width="leftIcon.width" :height="leftIcon.height" color="#FFFFFF" :fill="false"></svgicon>
       </div>
       <div class="control-label">
-        <div class="control-output">
-          <input type="text" :value="value" @change="onInput">
-        </div>{{ label }}
+        {{ label }}
       </div>
       <div>
         <svgicon v-if="rightIcon" :name="rightIcon.icon" :width="rightIcon.width" :height="rightIcon.height" color="#FFFFFF" :fill="false"></svgicon>
       </div>
     </div>
-    <input class="custom-range" type="range" :min="min" :max="max" :step="step" :value="value" @input="onInput">
+    <div class="control-header">
+      <input class="control-text-input" type="text" :value="value" @change="onInput">
+      <a class="btn" @click="$emit('reset')">reset</a>
+    </div>
   </div>
 </template>
 
@@ -21,7 +22,7 @@
 import '@/icons'
 
 export default {
-  name: 'Slider',
+  name: 'TextInput',
   props: {
     leftIcon: {
       type: Object
@@ -29,37 +30,18 @@ export default {
     rightIcon: {
       type: Object
     },
-    min: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 100
-    },
-    step: {
-      type: Number,
-      default: 1
-    },
     label: {
       type: String,
       default: 'Label'
     },
     value: {
-      type: Number,
-      default: 50
+      type: String,
+      default: ''
     }
   },
   methods: {
     onInput ($event) {
-      if ($event.target.value > this.min) {
-        this.$emit('input', $event.target.value)
-      } else {
-        this.$emit('input', this.min)
-      }
-      if ($event.target.value < this.min) {
-        this.$emit('input', this.min)
-      }
+      this.$emit('input', $event.target.value)
     }
   }
 }

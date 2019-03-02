@@ -133,44 +133,32 @@ export default {
           let getSizeFunc = creator()
           return getSizeFunc
         } catch (e) {
-          // console.log(e)
         }
       }
       try {
         let myFunc = compileFunction(generateFunc(this.scaleFormula))
         return myFunc(x)
       } catch (e) {
-        // console.log(e)
       }
     },
     rotationFunc (x) {
-      console.log('rotationFunc', this.rotationFormula)
-
       function generateFunc (rotation) {
-        // console.log('rotationFunc', rotation)
-
         return `function rotationEquation(i) {  return ${rotation}}`
       }
 
       function compileFunction (code) {
-        // console.log(code)
         try {
           let creator = new Function(code + '\n return rotationEquation')
           let getRotationFunc = creator()
-          // console.log(getRotationFunc)
-
           return getRotationFunc
         } catch (e) {
-          // console.log(e)
         }
       }
 
       try {
         let myFunc = compileFunction(generateFunc(this.rotationFormula))
-        console.log(myFunc(x))
         return myFunc(x)
       } catch (e) {
-        // console.log(e)
       }
     },
     generatePolygonData () {
