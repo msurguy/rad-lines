@@ -1,2 +1,10 @@
 /* eslint-disable */
+require('./angle-short')
+require('./angle-wide')
+require('./hexagon')
+require('./line-curve')
+require('./line-sharp')
+require('./square')
+require('./squares')
+require('./triangle-large')
 require('./triangle')
