@@ -14,9 +14,17 @@
         <div class="row">
           <div class="col-12">
             <button class="btn btn-primary btn-block" @click.prevent="download">
-              Download
+              Download SVG
             </button>
           </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-12">
+            <div class="credits text-center"><p>
+              Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<span class="fa fa-github"></span><a target="_blank" href="http://github.com/msurguy/polygon-tool">Source</a>)</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
