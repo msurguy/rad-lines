@@ -2,6 +2,7 @@
   <div class="paper">
     <svg ref="renderedPolygons" width="400" height="400" title="polygons" version="1.1" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
       <g>
+        <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};rd:{{radius}};sa:{{startAngle}};</desc>
         <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon"></closed-polyline>
       </g>
     </svg>
