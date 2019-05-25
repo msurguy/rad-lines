@@ -140,7 +140,7 @@ export default {
       this.rotationFormula = initialData().rotationFormula
     },
     download () {
-      eventBus.$emit('download', 'Mom said do your homework!')
+      eventBus.$emit('download')
     }
   }
 }
