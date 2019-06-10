@@ -1,9 +1,9 @@
 <template>
   <div class="paper">
-    <svg ref="renderedPolygons" width="400" height="400" title="polygons" version="1.1" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <svg ref="renderedPolygons" width="1000" height="1000" title="polygons" version="1.1" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
       <g>
         <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};rd:{{radius}};sa:{{startAngle}};</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon"></closed-polyline>
+        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve"></closed-polyline>
       </g>
     </svg>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
-import { eventBus } from '@/main'
+import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
 
 export default {
@@ -28,13 +28,21 @@ export default {
       type: String,
       default: '10 * Math.sin(i * Math.PI / 9)'
     },
+    xPositionFormula: {
+      type: String,
+      default: '0'
+    },
+    yPositionFormula: {
+      type: String,
+      default: '0'
+    },
     width: {
       type: Number,
-      default: 400
+      default: 1000
     },
     height: {
       type: Number,
-      default: 400
+      default: 1000
     },
     quantity: {
       type: Number,
@@ -58,11 +66,15 @@ export default {
     },
     x: {
       type: Number,
-      default: 200
+      default: 400
     },
     y: {
       type: Number,
-      default: 200
+      default: 400
+    },
+    curve: {
+      type: String,
+      default: 'curveCardinalClosed'
     }
   },
   data () {
@@ -108,6 +120,12 @@ export default {
     },
     rotationFormula () {
       this.generatePolygonData()
+    },
+    xPositionFormula () {
+      this.generatePolygonData()
+    },
+    yPositionFormula () {
+      this.generatePolygonData()
     }
   },
   methods: {
@@ -131,13 +149,50 @@ export default {
       function compileFunction (code) {
         try {
           let creator = new Function(code + '\n return sizeEquation')
-          let getSizeFunc = creator()
-          return getSizeFunc
+          return creator()
         } catch (e) {
         }
       }
       try {
         let myFunc = compileFunction(generateFunc(this.scaleFormula))
+        return myFunc(x)
+      } catch (e) {
+      }
+    },
+    xPositionFunc (x) {
+      function generateFunc (form) {
+        return `function xPosEquation(i) {  return ${form}}`
+      }
+
+      function compileFunction (code) {
+        try {
+          let creator = new Function(code + '\n return xPosEquation')
+          return creator()
+        } catch (e) {
+        }
+      }
+
+      try {
+        let myFunc = compileFunction(generateFunc(this.xPositionFormula))
+        return myFunc(x)
+      } catch (e) {
+      }
+    },
+    yPositionFunc (x) {
+      function generateFunc (form) {
+        return `function yPosEquation(i) {  return ${form}}`
+      }
+
+      function compileFunction (code) {
+        try {
+          let creator = new Function(code + '\n return yPosEquation')
+          return creator()
+        } catch (e) {
+        }
+      }
+
+      try {
+        let myFunc = compileFunction(generateFunc(this.yPositionFormula))
         return myFunc(x)
       } catch (e) {
       }
@@ -150,8 +205,7 @@ export default {
       function compileFunction (code) {
         try {
           let creator = new Function(code + '\n return rotationEquation')
-          let getRotationFunc = creator()
-          return getRotationFunc
+          return creator()
         } catch (e) {
         }
       }

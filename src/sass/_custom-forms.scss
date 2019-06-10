@@ -121,6 +121,7 @@
       @include gradient-bg($custom-checkbox-indicator-indeterminate-bg);
       @include box-shadow($custom-checkbox-indicator-indeterminate-box-shadow);
     }
+
     &::after {
       background-image: $custom-checkbox-indicator-icon-indeterminate;
     }
@@ -130,6 +131,7 @@
     &:checked ~ .custom-control-label::before {
       background-color: $custom-control-indicator-checked-disabled-bg;
     }
+
     &:indeterminate ~ .custom-control-label::before {
       background-color: $custom-control-indicator-checked-disabled-bg;
     }
@@ -376,9 +378,17 @@
 
     // Pseudo-elements must be split across multiple rulesets to have an effect.
     // No box-shadow() mixin for focus accessibility.
-    &::-webkit-slider-thumb { box-shadow: $custom-range-thumb-focus-box-shadow; }
-    &::-moz-range-thumb     { box-shadow: $custom-range-thumb-focus-box-shadow; }
-    &::-ms-thumb            { box-shadow: $custom-range-thumb-focus-box-shadow; }
+    &::-webkit-slider-thumb {
+      box-shadow: $custom-range-thumb-focus-box-shadow;
+    }
+
+    &::-moz-range-thumb {
+      box-shadow: $custom-range-thumb-focus-box-shadow;
+    }
+
+    &::-ms-thumb {
+      box-shadow: $custom-range-thumb-focus-box-shadow;
+    }
   }
 
   &::-moz-focus-outer {
@@ -443,7 +453,7 @@
     height: $custom-range-thumb-height;
     margin-top: 0; // Edge specific
     margin-right: $custom-range-thumb-focus-box-shadow-width; // Workaround that overflowed box-shadow is hidden.
-    margin-left: $custom-range-thumb-focus-box-shadow-width;  // Workaround that overflowed box-shadow is hidden.
+    margin-left: $custom-range-thumb-focus-box-shadow-width; // Workaround that overflowed box-shadow is hidden.
     @include gradient-bg($custom-range-thumb-bg);
     border: $custom-range-thumb-border;
     border-radius: ($custom-range-thumb-border-radius);
@@ -503,7 +513,7 @@
   //&:hover::-webkit-slider-runnable-track{
   //  background-image: linear-gradient(-270deg, #fad961 0%, #f76b1c 100%);
   //}
-  &:focus::-webkit-slider-runnable-track{
+  &:focus::-webkit-slider-runnable-track {
     background-image: linear-gradient(-270deg, #fad961 0%, #f76b1c 100%);
   }
 
@@ -543,7 +553,7 @@
       font-size: 14px;
       line-height: 1rem;
 
-      &:hover{
+      &:hover {
         color: white;
       }
     }
@@ -563,7 +573,7 @@
     color: #d2d2d2;
   }
 
-  .control-output input{
+  .control-output input {
     margin-right: 10px;
     height: 20px;
     width: 45px;
@@ -576,6 +586,19 @@
   }
 
   .control-text-input {
+    flex: 1;
+    font-family: monaco, Consolas, Lucida Console, monospace;
+    text-align: right;
+    margin-top: 5px;
+    height: 20px;
+    background-color: #1d1d1d;
+    color: #d2d2d2;
+    font-size: 14px;
+    line-height: 20px;
+    border: none;
+  }
+
+  .control-select-input {
     flex: 1;
     font-family: monaco, Consolas, Lucida Console, monospace;
     text-align: right;

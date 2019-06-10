@@ -10,6 +10,9 @@
       <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
       <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
       <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
+      <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
+      <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
+      <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
       <div class="container mt-3">
         <div class="row">
           <div class="col-12">
@@ -34,13 +37,22 @@
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <div id="paper">
-          <Polygons :scale-formula="scaleFormula" :rotationFormula="rotationFormula" :start-angle="startAngle.value" :radius="radius.value" :sides="sides.value" :roundness="roundness.value" :quantity="quantity.value"></Polygons>
-
+          <Polygons
+            :scale-formula="scaleFormula"
+            :xPositionFormula="xPositionFormula"
+            :yPositionFormula="yPositionFormula"
+            :rotationFormula="rotationFormula"
+            :start-angle="startAngle.value"
+            :radius="radius.value"
+            :sides="sides.value"
+            :roundness="roundness.value"
+            :quantity="quantity.value"
+            :curve="curve.selected">
+          </Polygons>
         </div>
       </div>
     </div>
     <!-- /#page-content-wrapper -->
-
   </div>
 </template>
 
@@ -48,12 +60,15 @@
 import Polygons from './components/Polygons'
 import Slider from './components/Slider'
 import TextInput from './components/TextInput'
+import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
 
 function initialData () {
   return {
     scaleFormula: 'i+i*7',
     rotationFormula: '10*Math.sin(i/2)',
+    xPositionFormula: '0',
+    yPositionFormula: '0',
     startAngle: {
       leftIcon: {
         icon: 'angle-short',
@@ -118,6 +133,26 @@ function initialData () {
         height: '22'
       },
       value: 20
+    },
+    curve: {
+      selected: 'curveCardinalClosed',
+      options: [
+        {text: 'curveCardinalClosed', value: 'curveCardinalClosed'},
+        {text: 'curveLinearClosed', value: 'curveLinearClosed'},
+        {text: 'curveBasisClosed', value: 'curveBasisClosed'},
+        {text: 'curveCatmullRomClosed', value: 'curveCatmullRomClosed'},
+        {text: 'curveNatural', value: 'curveNatural'},
+        {text: 'curveBundle', value: 'curveBundle'},
+        {text: 'curveLinear', value: 'curveLinear'},
+        {text: 'curveStep', value: 'curveStep'},
+        {text: 'curveCardinal', value: 'curveCardinal'},
+        {text: 'curveBasis', value: 'curveBasis'},
+        {text: 'curveBasisOpen', value: 'curveBasisOpen'},
+        {text: 'curveCardinalOpen', value: 'curveCardinalOpen'},
+        {text: 'curveCatmullRom', value: 'curveCatmullRom'},
+        {text: 'curveCatmullRomOpen', value: 'curveCatmullRomOpen'},
+        {text: 'curveMonotoneX', value: 'curveMonotoneX'}
+      ]
     }
   }
 }
@@ -127,7 +162,8 @@ export default {
   components: {
     Polygons,
     Slider,
-    TextInput
+    TextInput,
+    SelectField
   },
   data () {
     return initialData()
@@ -138,6 +174,12 @@ export default {
     },
     resetRotationFormula () {
       this.rotationFormula = initialData().rotationFormula
+    },
+    resetXPositionFormula () {
+      this.xPositionFormula = initialData().xPositionFormula
+    },
+    resetYPositionFormula () {
+      this.yPositionFormula = initialData().yPositionFormula
     },
     download () {
       eventBus.$emit('download')
