@@ -32,8 +32,6 @@ export default {
   computed: {
     line () {
       const path = line()
-        .x(d => d[0])
-        .y(d => d[1])
         .curve(this.getCurve(this.curve))
       return path(this.lineData)
     }
