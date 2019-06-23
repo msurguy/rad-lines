@@ -67,8 +67,8 @@ function initialData () {
   return {
     scaleFormula: 'i+i*7',
     rotationFormula: '10*Math.sin(i/2)',
-    xPositionFormula: '0',
-    yPositionFormula: '0',
+    xPositionFormula: '400',
+    yPositionFormula: '400',
     startAngle: {
       leftIcon: {
         icon: 'angle-short',

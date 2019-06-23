@@ -1,6 +1,6 @@
 <template>
   <div class="paper">
-    <svg ref="renderedPolygons" width="1000" height="1000" title="polygons" version="1.1" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+    <svg ref="renderedPolygons" width="800" height="800" title="polygons" version="1.1" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
       <g>
         <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};rd:{{radius}};sa:{{startAngle}};</desc>
         <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve"></closed-polyline>
@@ -30,19 +30,19 @@ export default {
     },
     xPositionFormula: {
       type: String,
-      default: '0'
+      default: '500'
     },
     yPositionFormula: {
       type: String,
-      default: '0'
+      default: '500'
     },
     width: {
       type: Number,
-      default: 1000
+      default: 800
     },
     height: {
       type: Number,
-      default: 1000
+      default: 800
     },
     quantity: {
       type: Number,
@@ -66,11 +66,11 @@ export default {
     },
     x: {
       type: Number,
-      default: 400
+      default: 500
     },
     y: {
       type: Number,
-      default: 400
+      default: 500
     },
     curve: {
       type: String,
@@ -219,7 +219,7 @@ export default {
     generatePolygonData () {
       this.polygons = []
       for (let i = 0; i < this.quantity; i++) {
-        this.polygons.push(this.createPolygon(this.x, this.y, this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
+        this.polygons.push(this.createPolygon(this.xPositionFunc(i), this.yPositionFunc(i), this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
       }
     },
     downloadSVG () {
