@@ -6,7 +6,16 @@
 
 ![Video](docs/polygontool.gif)
 
-# Support Creators
+# Samples
+
+Here are some samples of artworks created with this tool:
+
+![Sample 1](docs/sample-1.png)
+![Sample 2](docs/sample-2.png)
+![Sample 3](docs/sample-3.png)
+![Sample 4](docs/sample-4.png)
+
+# Support Creator
 
 If you find this tool useful, I'd like to encourage you to support my efforts by buying me coffee or giving any other amount on these platforms:
 
