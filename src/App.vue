@@ -57,7 +57,7 @@
     <div class="footer-wrapper">
         <div class="footer">
           <h1>Rad Lines</h1>
-          <p>Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<span class="fa fa-github"></span><a target="_blank" href="http://github.com/msurguy/polygon-tool">Source</a>)</p>
+          <p>Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<a target="_blank" href="http://github.com/msurguy/rad-lines">Source</a>)</p>
         </div>
       </div>
   </div>
