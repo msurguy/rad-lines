@@ -10,10 +10,10 @@
 
 Here are some samples of artworks created with this tool:
 
-![Sample 1](docs/sample-1.png)
-![Sample 2](docs/sample-2.png)
-![Sample 3](docs/sample-3.png)
-![Sample 4](docs/sample-4.png)
+![Sample 1](docs/sample-1.png =250x250)
+![Sample 2](docs/sample-2.png =250x250)
+![Sample 3](docs/sample-3.png =250x250)
+![Sample 4](docs/sample-4.png =250x250)
 
 # Support Creator
 
