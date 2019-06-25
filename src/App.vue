@@ -2,16 +2,25 @@
   <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
-      <div class="sidebar-heading text-center mt-3 mb-3"><h2>Twisted Polygons</h2></div>
-      <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="0.1" :min="0" :max="100" label="Radius" v-model.number="radius.value"></slider>
-      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="12" label="Sides" v-model.number="sides.value"></slider>
+      <div class="sidebar-heading text-center mt-3 mb-3"><h2>Rad Lines</h2></div>
+      <toggle label="Randomize Edges" v-model="mode.value"></toggle>
+      <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
+      <transition name="slide">
+        <slider v-if="mode.value" :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
+      </transition>
+      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="mode.value ? 200 : 14" label="Sides" v-model.number="sides.value"></slider>
       <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
-      <slider :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
-      <slider :left-icon="startAngle.leftIcon" :right-icon="startAngle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="startAngle.value"></slider>
+      <slider :disabled="!roundness.enabled" :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
+      <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="angle.min"></slider>
+      <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="angle.max"></slider>
       <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
       <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
-      <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
-      <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
+      <transition name="slide">
+        <div v-if="!mode.value" >
+          <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
+          <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
+        </div>
+      </transition>
       <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
       <div class="container mt-3">
         <div class="row">
@@ -42,12 +51,15 @@
             :xPositionFormula="xPositionFormula"
             :yPositionFormula="yPositionFormula"
             :rotationFormula="rotationFormula"
-            :start-angle="startAngle.value"
-            :radius="radius.value"
+            :min-angle="angle.min"
+            :max-angle="angle.max"
+            :min-radius="radius.min"
+            :max-radius="radius.max"
             :sides="sides.value"
             :roundness="roundness.value"
             :quantity="quantity.value"
-            :curve="curve.selected">
+            :curve="curve.selected"
+            :radial="mode.value">
           </Polygons>
         </div>
       </div>
@@ -60,6 +72,7 @@
 import Polygons from './components/Polygons'
 import Slider from './components/Slider'
 import TextInput from './components/TextInput'
+import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
 
@@ -69,7 +82,7 @@ function initialData () {
     rotationFormula: '10*Math.sin(i/2)',
     xPositionFormula: '400',
     yPositionFormula: '400',
-    startAngle: {
+    angle: {
       leftIcon: {
         icon: 'angle-short',
         width: '22',
@@ -80,7 +93,8 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 0
+      min: 0,
+      max: 360
     },
     sides: {
       leftIcon: {
@@ -108,6 +122,19 @@ function initialData () {
       },
       value: 10
     },
+    mode: {
+      leftIcon: {
+        icon: 'square',
+        width: '22',
+        height: '22'
+      },
+      rightIcon: {
+        icon: 'squares',
+        width: '22',
+        height: '22'
+      },
+      value: false
+    },
     roundness: {
       leftIcon: {
         icon: 'line-sharp',
@@ -119,7 +146,8 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 0.8
+      value: 0.8,
+      enabled: true
     },
     radius: {
       leftIcon: {
@@ -132,7 +160,8 @@ function initialData () {
         width: '22',
         height: '22'
       },
-      value: 20
+      min: 20,
+      max: 50
     },
     curve: {
       selected: 'curveCardinalClosed',
@@ -163,7 +192,8 @@ export default {
     Polygons,
     Slider,
     TextInput,
-    SelectField
+    SelectField,
+    Toggle
   },
   data () {
     return initialData()
@@ -184,11 +214,17 @@ export default {
     download () {
       eventBus.$emit('download')
     }
+  },
+  watch: {
+    'curve.selected' (curveType) {
+      const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
+      this.roundness.enabled = roundnessCurveTypes.indexOf(curveType) >= 0
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
   #wrapper {
     flex-direction: column;
   }
@@ -208,5 +244,22 @@ export default {
       width: 300px;
       min-width: 300px;
     }
+  }
+
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: all 300ms ease-in-out;
+  }
+  .slide-enter-to,
+  .slide-leave {
+    max-height: 200px;
+    opacity: 1;
+    overflow: hidden;
+  }
+  .slide-enter,
+  .slide-leave-to {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
   }
 </style>

@@ -6,14 +6,14 @@
       </div>
       <div class="control-label">
         <div class="control-output">
-          <input type="text" :value="value" @change="onInput">
+          <input :disabled="disabled" type="text" :value="value" @change="onInput">
         </div>{{ label }}
       </div>
       <div>
         <svgicon v-if="rightIcon" :name="rightIcon.icon" :width="rightIcon.width" :height="rightIcon.height" color="#FFFFFF" :fill="false"></svgicon>
       </div>
     </div>
-    <input class="custom-range" type="range" :min="min" :max="max" :step="step" :value="value" @input="onInput">
+    <input :disabled="disabled" class="custom-range" type="range" :min="min" :max="max" :step="step" :value="value" @input="onInput">
   </div>
 </template>
 
@@ -23,6 +23,10 @@ import '@/icons'
 export default {
   name: 'Slider',
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     leftIcon: {
       type: Object
     },
