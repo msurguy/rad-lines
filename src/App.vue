@@ -2,7 +2,6 @@
   <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
-      <div class="sidebar-heading text-center mt-3 mb-3"><h2>Rad Lines</h2></div>
       <toggle label="Randomize Edges" v-model="mode.value"></toggle>
       <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
       <transition name="slide">
@@ -30,37 +29,32 @@
             </button>
           </div>
         </div>
-        <div class="row mt-5">
-          <div class="col-12">
-            <div class="credits text-center"><p>
-              Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<span class="fa fa-github"></span><a target="_blank" href="http://github.com/msurguy/polygon-tool">Source</a>)</p>
-            </div>
-          </div>
-
-        </div>
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
-      <div class="container-fluid">
-        <div id="paper">
-          <Polygons
-            :scale-formula="scaleFormula"
-            :xPositionFormula="xPositionFormula"
-            :yPositionFormula="yPositionFormula"
-            :rotationFormula="rotationFormula"
-            :min-angle="angle.min"
-            :max-angle="angle.max"
-            :min-radius="radius.min"
-            :max-radius="radius.max"
-            :sides="sides.value"
-            :roundness="roundness.value"
-            :quantity="quantity.value"
-            :curve="curve.selected"
-            :radial="mode.value">
-          </Polygons>
+      <div id="paper">
+        <Polygons
+          :scale-formula="scaleFormula"
+          :xPositionFormula="xPositionFormula"
+          :yPositionFormula="yPositionFormula"
+          :rotationFormula="rotationFormula"
+          :min-angle="angle.min"
+          :max-angle="angle.max"
+          :min-radius="radius.min"
+          :max-radius="radius.max"
+          :sides="sides.value"
+          :roundness="roundness.value"
+          :quantity="quantity.value"
+          :curve="curve.selected"
+          :radial="mode.value">
+        </Polygons>
+      </div>
+      <div class="footer-wrapper">
+        <div class="footer">
+          <p>Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<span class="fa fa-github"></span><a target="_blank" href="http://github.com/msurguy/polygon-tool">Source</a>)</p>
         </div>
       </div>
     </div>
@@ -225,13 +219,31 @@ export default {
 </script>
 
 <style scoped>
+  #paper {
+    display: block;
+    overflow: auto;
+  }
+
   #wrapper {
     flex-direction: column;
   }
 
   #page-content-wrapper {
     width: 100%;
+    max-height: 100%;
     background-color: #C5C5C5;
+    position: relative;
+  }
+
+  .footer-wrapper {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .footer {
+    padding: 15px;
+    color: #000;
   }
 
   @media (min-width: 768px) {
@@ -240,9 +252,9 @@ export default {
     }
 
     #sidebar-wrapper {
-      min-height: 100vh;
       width: 300px;
       min-width: 300px;
+      overflow: auto;
     }
   }
 

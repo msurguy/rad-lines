@@ -1,12 +1,10 @@
 <template>
-  <div class="paper">
-    <svg ref="renderedPolygons" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
-      <g :transform="radial ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
-      <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{radial}}</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :radial="radial"></closed-polyline>
-      </g>
-    </svg>
-  </div>
+  <svg ref="renderedPolygons" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
+    <g :transform="radial ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
+    <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{radial}}</desc>
+      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :radial="radial"></closed-polyline>
+    </g>
+  </svg>
 </template>
 
 <script>
@@ -310,9 +308,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.paper {
-  display: block;
-}
-</style>
