@@ -1,7 +1,7 @@
 {
-  "name": "polygon-tool",
+  "name": "rad-lines",
   "version": "1.0.0",
-  "description": "Twisted Polygon Tool",
+  "description": "Rad Lines Generator",
   "author": "Maksim <msurguy@uw.edu>",
   "private": false,
   "scripts": {

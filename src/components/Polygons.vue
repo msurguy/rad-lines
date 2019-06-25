@@ -1,18 +1,51 @@
 <template>
-  <div class="paper">
-    <svg ref="renderedPolygons" width="800" height="800" title="polygons" version="1.1" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-      <g>
-        <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};rd:{{radius}};sa:{{startAngle}};</desc>
-        <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve"></closed-polyline>
-      </g>
-    </svg>
-  </div>
+  <svg ref="renderedPolygons" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
+    <g :transform="radial ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
+    <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{radial}}</desc>
+      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :radial="radial"></closed-polyline>
+    </g>
+  </svg>
 </template>
 
 <script>
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
+
+let seed = 2
+
+let seededRandom = () => {
+  let x = Math.sin(seed++) * 10000
+  return x - Math.floor(x)
+}
+
+let randomInRange = (min, max) => {
+  return seededRandom() * (max - min) + min
+}
+
+let generatePoints = (maxAngle, minRadius, maxRadius, breaks) => {
+  let points = []
+  const slice = degreesToRadians(maxAngle) / breaks
+
+  for (let i = 0; i <= breaks; i++) {
+    const point = [ i * slice, randomInRange(minRadius, maxRadius) ]
+    points.push(point)
+  }
+
+  points[0][1] = points[points.length - 1][1]
+
+  return points
+}
+
+let transformPoints = (points, scaleIncrement, rotationIncrement) => {
+  return points.map((point) => {
+    return [degreesToRadians(rotationIncrement) + point[0], scaleIncrement + point[1]]
+  })
+}
+
+let degreesToRadians = (degrees) => {
+  return degrees * (Math.PI / 180)
+}
 
 export default {
   name: 'Polygons',
@@ -30,11 +63,11 @@ export default {
     },
     xPositionFormula: {
       type: String,
-      default: '500'
+      default: '400'
     },
     yPositionFormula: {
       type: String,
-      default: '500'
+      default: '400'
     },
     width: {
       type: Number,
@@ -56,13 +89,21 @@ export default {
       type: Number,
       default: 0.8
     },
-    radius: {
+    minRadius: {
       type: Number,
       default: 20
     },
-    startAngle: {
+    maxRadius: {
+      type: Number,
+      default: 50
+    },
+    minAngle: {
       type: Number,
       default: 0
+    },
+    maxAngle: {
+      type: Number,
+      default: 360
     },
     x: {
       type: Number,
@@ -75,6 +116,10 @@ export default {
     curve: {
       type: String,
       default: 'curveCardinalClosed'
+    },
+    radial: {
+      type: Boolean,
+      deafult: false
     }
   },
   data () {
@@ -94,13 +139,16 @@ export default {
     y () {
       this.generatePolygonData()
     },
-    startAngle () {
+    minAngle () {
       this.generatePolygonData()
     },
-    radius () {
+    maxAngle () {
       this.generatePolygonData()
     },
-    roundness () {
+    minRadius () {
+      this.generatePolygonData()
+    },
+    maxRadius () {
       this.generatePolygonData()
     },
     sides () {
@@ -126,15 +174,18 @@ export default {
     },
     yPositionFormula () {
       this.generatePolygonData()
+    },
+    radial () {
+      this.generatePolygonData()
     }
   },
   methods: {
-    createPolygon (x, y, numOfSides, radius, startAngle) {
+    createPolygon (x, y, numOfSides, radius, minAngle, maxAngle) {
       let arr = []
       let xo
       let yo
       for (let i = 0; i < numOfSides; i++) {
-        let t = (2 * Math.PI / numOfSides * i) + startAngle * (Math.PI / 180)
+        let t = (degreesToRadians(maxAngle) / numOfSides * i) + minAngle * (Math.PI / 180)
         xo = x + radius * Math.sin(t)
         yo = y + radius * Math.cos(t)
         arr.push([xo, yo])
@@ -218,8 +269,13 @@ export default {
     },
     generatePolygonData () {
       this.polygons = []
+      let originalPoints = this.radial ? generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
       for (let i = 0; i < this.quantity; i++) {
-        this.polygons.push(this.createPolygon(this.xPositionFunc(i), this.yPositionFunc(i), this.sides, this.radius + this.scaleFunc(i), this.startAngle + this.rotationFunc(i)))
+        if (this.radial) {
+          this.polygons.push(transformPoints(originalPoints, this.scaleFunc(i), this.minAngle + this.rotationFunc(i)))
+        } else {
+          this.polygons.push(this.createPolygon(this.xPositionFunc(i), this.yPositionFunc(i), this.sides, this.minRadius + this.scaleFunc(i), this.minAngle + this.rotationFunc(i), this.maxAngle))
+        }
       }
     },
     downloadSVG () {
@@ -252,9 +308,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.paper {
-  display: block;
-}
-</style>

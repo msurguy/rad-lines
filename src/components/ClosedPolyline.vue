@@ -4,7 +4,7 @@
 
 <script>
 import {
-  line, curveCardinalClosed,
+  line, radialLine, curveCardinalClosed,
   curveBundle, curveLinear, curveLinearClosed, curveBasis,
   curveBasisOpen, curveBasisClosed, curveCardinal,
   curveCardinalOpen, curveCatmullRom, curveCatmullRomClosed,
@@ -27,13 +27,16 @@ export default {
     curve: {
       type: String,
       default: 'curveCardinalClosed'
+    },
+    radial: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     line () {
-      const path = line()
-        .x(d => d[0])
-        .y(d => d[1])
+      const path = this.radial ? radialLine()
+        .curve(this.getCurve(this.curve)) : line()
         .curve(this.getCurve(this.curve))
       return path(this.lineData)
     }
