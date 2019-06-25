@@ -1,41 +1,42 @@
 <template>
-  <div class="d-flex" id="wrapper">
+  <div class="page">
     <!-- Sidebar -->
-    <div id="sidebar-wrapper">
-      <toggle label="Randomize Edges" v-model="mode.value"></toggle>
-      <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
-      <transition name="slide">
-        <slider v-if="mode.value" :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
-      </transition>
-      <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="mode.value ? 200 : 14" label="Sides" v-model.number="sides.value"></slider>
-      <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
-      <slider :disabled="!roundness.enabled" :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
-      <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="angle.min"></slider>
-      <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="angle.max"></slider>
-      <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
-      <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
-      <transition name="slide">
-        <div v-if="!mode.value" >
-          <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
-          <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
-        </div>
-      </transition>
-      <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
-      <div class="container mt-3">
-        <div class="row">
-          <div class="col-12">
-            <button class="btn btn-primary btn-block" @click.prevent="download">
-              Download SVG
-            </button>
-          </div>
+    <div class="sidebar">
+      <div class="controls-wrapper">
+        <div class="controls">
+          <toggle label="Randomize Edges" v-model="mode.value"></toggle>
+          <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
+          <transition name="slide">
+            <slider v-if="mode.value" :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
+          </transition>
+          <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="mode.value ? 200 : 14" label="Sides" v-model.number="sides.value"></slider>
+          <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
+          <slider :disabled="!roundness.enabled" :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
+          <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="angle.min"></slider>
+          <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="angle.max"></slider>
+          <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
+          <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
+          <transition name="slide">
+            <div v-if="!mode.value" >
+              <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
+              <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
+            </div>
+          </transition>
+          <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
         </div>
       </div>
+
+      <div class="button">
+        <div class="reveal"></div>
+        <button class="btn btn-primary btn-block" @click.prevent="download">
+          Download SVG
+        </button>
+      </div>
     </div>
-    <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div id="paper">
+    <div class="paper">
+      <div class="sketch">
         <Polygons
           :scale-formula="scaleFormula"
           :xPositionFormula="xPositionFormula"
@@ -52,13 +53,13 @@
           :radial="mode.value">
         </Polygons>
       </div>
-      <div class="footer-wrapper">
+    </div>
+    <div class="footer-wrapper">
         <div class="footer">
+          <h1>Rad Lines</h1>
           <p>Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<span class="fa fa-github"></span><a target="_blank" href="http://github.com/msurguy/polygon-tool">Source</a>)</p>
         </div>
       </div>
-    </div>
-    <!-- /#page-content-wrapper -->
   </div>
 </template>
 
@@ -219,19 +220,46 @@ export default {
 </script>
 
 <style scoped>
-  #paper {
-    display: block;
-    overflow: auto;
+  .page {
+    position: relative;
+    height: 100%;
+    display: flex;
   }
 
-  #wrapper {
-    flex-direction: column;
-  }
-
-  #page-content-wrapper {
+  .controls {
+    background-color: grey;
     width: 100%;
-    max-height: 100%;
-    background-color: #C5C5C5;
+    margin-bottom: 50px;
+  }
+
+  .controls-wrapper {
+    max-height: 100vh;
+    overflow: scroll;
+  }
+
+  .button {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .reveal {
+    display: block;
+    height: 15px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgb(47, 47, 47) 100%);
+  }
+
+  .paper {
+    background-color: #dedede;
+    position: relative;
+    max-height: 100vh;
+    width: calc(100% - 300px);
+    overflow: scroll;
+  }
+
+  .sidebar {
+    width: 300px;
     position: relative;
   }
 
@@ -239,22 +267,34 @@ export default {
     position: absolute;
     bottom: 0;
     right: 0;
+    color: #2D2D2D;
   }
 
   .footer {
-    padding: 15px;
-    color: #000;
+    padding: 15px 15px 0 15px;
+    text-align: right;
   }
 
-  @media (min-width: 768px) {
-    #wrapper {
-      flex-direction: row;
+  @media (max-width: 767px) {
+    .page {
+      flex-direction: column;
     }
 
-    #sidebar-wrapper {
-      width: 300px;
-      min-width: 300px;
-      overflow: auto;
+    .controls-wrapper {
+      max-height: none;
+    }
+
+    .sidebar {
+      width: 100%;
+    }
+
+    .paper {
+      width: 100%;
+      max-height: none;
+    }
+
+    .footer-wrapper {
+      position: relative;
     }
   }
 
