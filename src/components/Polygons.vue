@@ -11,6 +11,7 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
+const math = require('mathjs-expression-parser')
 
 let seed = 2
 
@@ -59,7 +60,7 @@ export default {
     },
     rotationFormula: {
       type: String,
-      default: '10 * Math.sin(i * Math.PI / 9)'
+      default: '10 * sin(i * pi / 9)'
     },
     xPositionFormula: {
       type: String,
@@ -192,89 +193,18 @@ export default {
       }
       return arr
     },
-    scaleFunc (x) {
-      function generateFunc (form) {
-        return `function sizeEquation(i) {  return ${form}}`
-      }
-
-      function compileFunction (code) {
-        try {
-          let creator = new Function(code + '\n return sizeEquation')
-          return creator()
-        } catch (e) {
-        }
-      }
-      try {
-        let myFunc = compileFunction(generateFunc(this.scaleFormula))
-        return myFunc(x)
-      } catch (e) {
-      }
-    },
-    xPositionFunc (x) {
-      function generateFunc (form) {
-        return `function xPosEquation(i) {  return ${form}}`
-      }
-
-      function compileFunction (code) {
-        try {
-          let creator = new Function(code + '\n return xPosEquation')
-          return creator()
-        } catch (e) {
-        }
-      }
-
-      try {
-        let myFunc = compileFunction(generateFunc(this.xPositionFormula))
-        return myFunc(x)
-      } catch (e) {
-      }
-    },
-    yPositionFunc (x) {
-      function generateFunc (form) {
-        return `function yPosEquation(i) {  return ${form}}`
-      }
-
-      function compileFunction (code) {
-        try {
-          let creator = new Function(code + '\n return yPosEquation')
-          return creator()
-        } catch (e) {
-        }
-      }
-
-      try {
-        let myFunc = compileFunction(generateFunc(this.yPositionFormula))
-        return myFunc(x)
-      } catch (e) {
-      }
-    },
-    rotationFunc (x) {
-      function generateFunc (rotation) {
-        return `function rotationEquation(i) {  return ${rotation}}`
-      }
-
-      function compileFunction (code) {
-        try {
-          let creator = new Function(code + '\n return rotationEquation')
-          return creator()
-        } catch (e) {
-        }
-      }
-
-      try {
-        let myFunc = compileFunction(generateFunc(this.rotationFormula))
-        return myFunc(x)
-      } catch (e) {
-      }
-    },
     generatePolygonData () {
       this.polygons = []
       let originalPoints = this.radial ? generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
       for (let i = 0; i < this.quantity; i++) {
-        if (this.radial) {
-          this.polygons.push(transformPoints(originalPoints, this.scaleFunc(i), this.minAngle + this.rotationFunc(i)))
-        } else {
-          this.polygons.push(this.createPolygon(this.xPositionFunc(i), this.yPositionFunc(i), this.sides, this.minRadius + this.scaleFunc(i), this.minAngle + this.rotationFunc(i), this.maxAngle))
+        try {
+          if (this.radial) {
+            this.polygons.push(transformPoints(originalPoints, math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i})))
+          } else {
+            this.polygons.push(this.createPolygon(math.eval(this.xPositionFormula, { i: i}), math.eval(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}), this.maxAngle))
+          }
+        } catch (e) {
+          console.log(e)
         }
       }
     },
