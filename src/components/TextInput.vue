@@ -82,11 +82,8 @@ export default {
 
 <style scoped>
   .popper-content {
-    /*background-color: #fafafa;*/
-    /*color: #212121;*/
     width: 280px;
     text-align: left;
-    border: 1px #ebebeb solid;
     padding: 10px;
   }
 </style>
