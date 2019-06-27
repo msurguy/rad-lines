@@ -256,9 +256,11 @@ export default {
     max-height: 100vh;
     width: calc(100% - 300px);
     overflow: scroll;
+    z-index: 1;
   }
 
   .sidebar {
+    z-index: 10;
     width: 300px;
     position: relative;
   }
