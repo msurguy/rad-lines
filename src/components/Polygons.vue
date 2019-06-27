@@ -11,6 +11,7 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
+const math = require('mathjs-expression-parser')
 
 let seed = 2
 
@@ -59,7 +60,7 @@ export default {
     },
     rotationFormula: {
       type: String,
-      default: '10 * Math.sin(i * Math.PI / 9)'
+      default: '10 * sin(i * pi / 9)'
     },
     xPositionFormula: {
       type: String,
@@ -271,10 +272,14 @@ export default {
       this.polygons = []
       let originalPoints = this.radial ? generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
       for (let i = 0; i < this.quantity; i++) {
-        if (this.radial) {
-          this.polygons.push(transformPoints(originalPoints, this.scaleFunc(i), this.minAngle + this.rotationFunc(i)))
-        } else {
-          this.polygons.push(this.createPolygon(this.xPositionFunc(i), this.yPositionFunc(i), this.sides, this.minRadius + this.scaleFunc(i), this.minAngle + this.rotationFunc(i), this.maxAngle))
+        try {
+          if (this.radial) {
+            this.polygons.push(transformPoints(originalPoints, math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i})))
+          } else {
+            this.polygons.push(this.createPolygon(math.eval(this.xPositionFormula, { i: i}), math.eval(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}), this.maxAngle))
+          }
+        } catch (e) {
+          console.log(e)
         }
       }
     },

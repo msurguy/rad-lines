@@ -74,7 +74,7 @@ import { eventBus } from '@/main'
 function initialData () {
   return {
     scaleFormula: 'i+i*7',
-    rotationFormula: '10*Math.sin(i/2)',
+    rotationFormula: '10*sin(i/2)',
     xPositionFormula: '400',
     yPositionFormula: '400',
     angle: {
