@@ -28,17 +28,15 @@ export default {
       type: String,
       default: 'curveCardinalClosed'
     },
-    radial: {
+    randomize: {
       type: Boolean,
       default: false
     }
   },
   computed: {
     line () {
-      const path = this.radial ? radialLine()
-        .curve(this.getCurve(this.curve)) : line()
-        .curve(this.getCurve(this.curve))
-      return path(this.lineData)
+      const path = this.randomize ? radialLine() : line()
+      return path.curve(this.getCurve(this.curve))(this.lineData)
     }
   },
   methods: {

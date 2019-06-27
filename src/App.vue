@@ -4,12 +4,12 @@
     <div class="sidebar">
       <div class="controls-wrapper">
         <div class="controls">
-          <toggle label="Randomize Edges" v-model="mode.value"></toggle>
+          <toggle label="Randomize Edges" v-model="randomize.value"></toggle>
           <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
           <transition name="slide">
-            <slider v-if="mode.value" :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
+            <slider v-if="randomize.value" :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
           </transition>
-          <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="mode.value ? 200 : 14" label="Sides" v-model.number="sides.value"></slider>
+          <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="randomize.value ? 200 : 14" label="Sides" v-model.number="sides.value"></slider>
           <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
           <slider :disabled="!roundness.enabled" :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
           <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="angle.min"></slider>
@@ -17,7 +17,7 @@
           <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
           <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
           <transition name="slide">
-            <div v-if="!mode.value" >
+            <div v-if="!randomize.value" >
               <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
               <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
             </div>
@@ -50,7 +50,7 @@
           :roundness="roundness.value"
           :quantity="quantity.value"
           :curve="curve.selected"
-          :radial="mode.value">
+          :randomize="randomize.value">
         </Polygons>
       </div>
     </div>
@@ -117,17 +117,7 @@ function initialData () {
       },
       value: 10
     },
-    mode: {
-      leftIcon: {
-        icon: 'square',
-        width: '22',
-        height: '22'
-      },
-      rightIcon: {
-        icon: 'squares',
-        width: '22',
-        height: '22'
-      },
+    randomize: {
       value: false
     },
     roundness: {
@@ -266,6 +256,7 @@ export default {
   }
 
   .footer-wrapper {
+    z-index: 1000;
     position: absolute;
     bottom: 0;
     right: 0;
@@ -297,6 +288,7 @@ export default {
 
     .footer-wrapper {
       position: relative;
+      background-color: #CCC;
     }
   }
 

@@ -1,8 +1,8 @@
 <template>
   <svg ref="renderedPolygons" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
-    <g :transform="radial ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
-    <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{radial}}</desc>
-      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :radial="radial"></closed-polyline>
+    <g :transform="randomize ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
+    <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
+      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize"></closed-polyline>
     </g>
   </svg>
 </template>
@@ -118,9 +118,9 @@ export default {
       type: String,
       default: 'curveCardinalClosed'
     },
-    radial: {
+    randomize: {
       type: Boolean,
-      deafult: false
+      default: false
     }
   },
   data () {
@@ -176,7 +176,7 @@ export default {
     yPositionFormula () {
       this.generatePolygonData()
     },
-    radial () {
+    randomize () {
       this.generatePolygonData()
     }
   },
@@ -195,10 +195,10 @@ export default {
     },
     generatePolygonData () {
       this.polygons = []
-      let originalPoints = this.radial ? generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
+      let originalPoints = this.randomize ? generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
       for (let i = 0; i < this.quantity; i++) {
         try {
-          if (this.radial) {
+          if (this.randomize) {
             this.polygons.push(transformPoints(originalPoints, math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i})))
           } else {
             this.polygons.push(this.createPolygon(math.eval(this.xPositionFormula, { i: i}), math.eval(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}), this.maxAngle))
