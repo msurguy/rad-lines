@@ -1,0 +1,158 @@
+const cfProb = 10 // base probability to generate a point.
+
+const probabilityClass = {
+  POINT: cfProb,
+  LENGTH: cfProb * 0.5,
+  TRIGONOMETRY: cfProb * 0.7,
+  ARITHMETICS: cfProb * 0.9,
+  MINMAX: cfProb * 0.4,
+  EXP: cfProb * 0.1,
+  SIGN: cfProb * 0.01
+}
+
+class BaseFunctionNode {
+  constructor (className) {
+    this.probability = 0
+    this.className = className
+  }
+
+  getProbability () {
+    return probabilityClass[this.className]
+  }
+
+  render () {
+    return ''
+  }
+}
+
+class SingleArgumentFunction extends BaseFunctionNode {
+  constructor (operator, p) {
+    super(p)
+    this.operator = operator
+  }
+
+  render () {
+    let prevP = this.getProbability()
+    probabilityClass[this.className] *= 0.25
+    normalizeProbabilities()
+    let args = generateArguments()
+    probabilityClass[this.className] = prevP
+    normalizeProbabilities()
+    return this.operator(args)
+  }
+}
+
+class DualArgumentFunction extends BaseFunctionNode {
+  constructor (operator, p) {
+    super(p)
+    this.operator = operator
+  }
+
+  render () {
+    // Decrease our probability to appear
+    let prevP = this.getProbability()
+    probabilityClass[this.className] *= 0.25
+
+    normalizeProbabilities()
+    let left = generateArguments()
+    let right = generateArguments()
+    // revert it back;
+    probabilityClass[this.className] = prevP
+    normalizeProbabilities()
+    return this.operator(left, right)
+  }
+}
+
+class ConstantFunction extends BaseFunctionNode {
+  constructor (constant, p) {
+    super(p)
+    this.constant = constant
+  }
+
+  render () {
+    return this.constant
+  }
+}
+
+const fList = [
+  new ConstantFunction('i', 'POINT'),
+  new ConstantFunction(`random()`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(() => getRandomInt(0, 360), 'POINT'),
+  new ConstantFunction('sqrt(i)', 'LENGTH'),
+
+  new SingleArgumentFunction(a => `sin(${a})`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(a => `cos(${a})`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(a => `tan(${a})`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(a => `acos(${a})`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(a => `asin(${a})`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(a => `atan(${a})`, 'TRIGONOMETRY'),
+  new SingleArgumentFunction(a => `atan2(${a})`, 'TRIGONOMETRY'),
+  // new SingleArgumentFunction(a => `Math.sqrt(${a})`, cfProb * 0.8),
+  // new SingleArgumentFunction(a => `inversesqrt(${a})`, cfProb * 0.8),
+
+  new DualArgumentFunction((a, b) => `${a}*${b}`, 'ARITHMETICS'),
+  new DualArgumentFunction((a, b) => `${a}/${b}`, 'ARITHMETICS'),
+  new DualArgumentFunction((a, b) => `(${a}+${b})`, 'ARITHMETICS'),
+  new DualArgumentFunction((a, b) => `(${a}-${b})`, 'ARITHMETICS'),
+  new DualArgumentFunction((a, b) => `(${a}%${b})`, 'ARITHMETICS'),
+
+  new DualArgumentFunction((a, b) => {
+    if (a === b) return a
+    return `min(${a},${b})`
+  }, 'MINMAX'),
+  new DualArgumentFunction((a, b) => {
+    if (a === b) return a
+    return `max(${a},${b})`
+  }, 'MINMAX'),
+
+  new SingleArgumentFunction(a => `log(abs(${a}))`, 'EXP'),
+  new SingleArgumentFunction(a => `exp(${a})`, 'EXP'),
+  new DualArgumentFunction((a, b) => `${a}^${b}`, 'EXP'),
+
+  new SingleArgumentFunction(a => `abs(${a})`, 'SIGN')
+  // new ConstantFunction('1.', cfProb * 0.001),
+]
+
+function normalizeProbabilities () {
+  let sum = 0
+  fList.forEach(element => (sum += element.getProbability()))
+  fList.forEach(element => {
+    element.probability = element.getProbability() / sum
+    return element.probability
+  })
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive).
+ * The value is no lower than min (or the next integer greater than min
+ * if min isn't an integer) and no greater than max (or the next integer
+ * lower than max if max isn't an integer).
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt (min, max) {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function generateArguments () {
+  const p = Math.random()
+  let cumulativeProbability = 0
+  let item
+  for (let i = 0; i < fList.length; ++i) {
+    item = fList[i]
+    cumulativeProbability += item.probability
+    if (p < cumulativeProbability) {
+      break
+    }
+  }
+
+  if (!item) throw new Error('no more items')
+
+  return item.render()
+}
+
+export default function generateFunction () {
+  normalizeProbabilities()
+  return `${generateArguments()}`
+}

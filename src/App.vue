@@ -28,6 +28,9 @@
 
       <div class="button">
         <div class="reveal"></div>
+        <button class="btn btn-primary btn-block" @click.prevent="generate">
+         Randomize
+        </button>
         <button class="btn btn-primary btn-block" @click.prevent="download">
           Download SVG
         </button>
@@ -70,6 +73,7 @@ import TextInput from './components/TextInput'
 import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
+import generateFunction from './lib/generate-function'
 
 function initialData () {
   return {
@@ -198,6 +202,12 @@ export default {
     },
     download () {
       eventBus.$emit('download')
+    },
+    generate () {
+      this.rotationFormula = generateFunction()
+      this.scaleFormula = 'i+i*' + generateFunction()
+      this.yPositionFormula = '400 + ' + generateFunction()
+      this.xPositionFormula = '400 + ' + generateFunction()
     }
   },
   watch: {
