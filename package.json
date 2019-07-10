@@ -14,6 +14,7 @@
   "dependencies": {
     "d3": "^5.9.1",
     "mathjs-expression-parser": "^1.0.2",
+    "query-state": "^4.2.0",
     "vue": "^2.5.2",
     "vue-popperjs": "^2.0.4"
   },
