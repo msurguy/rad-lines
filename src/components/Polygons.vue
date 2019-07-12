@@ -1,7 +1,7 @@
 <template>
   <svg ref="renderedPolygons" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
     <g :transform="randomize ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
-    <desc>sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
+    <desc>seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
       <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize"></closed-polyline>
     </g>
   </svg>
@@ -14,8 +14,8 @@ import ClosedPolyline from './ClosedPolyline'
 const math = require('mathjs-expression-parser')
 const Randoma = require('randoma')
 
-let generatePoints = (maxAngle, minRadius, maxRadius, breaks) => {
-  const random = new Randoma({seed: 10})
+let generatePoints = (seed, maxAngle, minRadius, maxRadius, breaks) => {
+  const random = new Randoma({seed: seed})
 
   let points = []
   const slice = degreesToRadians(maxAngle) / breaks
@@ -24,8 +24,6 @@ let generatePoints = (maxAngle, minRadius, maxRadius, breaks) => {
     const point = [ i * slice, random.integerInRange(minRadius, maxRadius) ]
     points.push(point)
   }
-  console.table(points)
-
   points[0][1] = points[points.length - 1][1]
 
   return points
@@ -114,6 +112,10 @@ export default {
     randomize: {
       type: Boolean,
       default: false
+    },
+    seed: {
+      type: Number,
+      default: 10
     }
   },
   data () {
@@ -171,6 +173,9 @@ export default {
     },
     randomize () {
       this.generatePolygonData()
+    },
+    seed () {
+      this.generatePolygonData()
     }
   },
   methods: {
@@ -188,7 +193,7 @@ export default {
     },
     generatePolygonData () {
       this.polygons = []
-      let originalPoints = this.randomize ? generatePoints(this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
+      let originalPoints = this.randomize ? generatePoints(this.seed, this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
       for (let i = 0; i < this.quantity; i++) {
         try {
           if (this.randomize) {

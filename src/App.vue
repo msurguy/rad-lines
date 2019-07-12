@@ -5,6 +5,7 @@
       <div class="controls-wrapper">
         <div class="controls">
           <toggle label="Randomize Edges" v-model="appState.randomize.value"></toggle>
+          <slider :min="1" :max="10000" label="Seed" v-model.number="appState.seed.value"></slider>
           <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
           <transition name="slide">
             <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
@@ -38,6 +39,7 @@
     <div class="paper">
       <div class="sketch">
         <Polygons
+          :seed="appState.seed.value"
           :scale-formula="appState.scaleFormula"
           :xPositionFormula="appState.xPositionFormula"
           :yPositionFormula="appState.yPositionFormula"
@@ -148,6 +150,9 @@ export default {
       qs.set({cv: value})
       const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
       this.appState.roundness.enabled = roundnessCurveTypes.indexOf(value) >= 0
+    },
+    'appState.seed.value' (value) {
+      qs.set({seed: value})
     }
   }
 }

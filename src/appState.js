@@ -14,6 +14,9 @@ export const appState = {
   rotationFormula: currentStateFromQuery.rf || defaultRotationFormula,
   xPositionFormula: currentStateFromQuery.xpos || defaultXPositionFormula,
   yPositionFormula: currentStateFromQuery.ypos || defaultYPositionFormula,
+  seed: {
+    value: currentStateFromQuery.seed || 10
+  },
   angle: {
     leftIcon: {
       icon: 'angle-short',
