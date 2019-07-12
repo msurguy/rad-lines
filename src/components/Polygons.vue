@@ -12,26 +12,19 @@
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
 const math = require('mathjs-expression-parser')
-
-let seed = 2
-
-let seededRandom = () => {
-  let x = Math.sin(seed++) * 10000
-  return x - Math.floor(x)
-}
-
-let randomInRange = (min, max) => {
-  return seededRandom() * (max - min) + min
-}
+const Randoma = require('randoma')
 
 let generatePoints = (maxAngle, minRadius, maxRadius, breaks) => {
+  const random = new Randoma({seed: 10})
+
   let points = []
   const slice = degreesToRadians(maxAngle) / breaks
 
   for (let i = 0; i <= breaks; i++) {
-    const point = [ i * slice, randomInRange(minRadius, maxRadius) ]
+    const point = [ i * slice, random.integerInRange(minRadius, maxRadius) ]
     points.push(point)
   }
+  console.table(points)
 
   points[0][1] = points[points.length - 1][1]
 
