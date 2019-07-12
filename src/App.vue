@@ -4,25 +4,25 @@
     <div class="sidebar">
       <div class="controls-wrapper">
         <div class="controls">
-          <toggle label="Randomize Edges" v-model="randomize.value"></toggle>
-          <slider :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="radius.min"></slider>
+          <toggle label="Randomize Edges" v-model="appState.randomize.value"></toggle>
+          <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
           <transition name="slide">
-            <slider v-if="randomize.value" :left-icon="radius.leftIcon" :right-icon="radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="radius.max"></slider>
+            <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
           </transition>
-          <slider :left-icon="sides.leftIcon" :right-icon="sides.rightIcon" :min="3" :max="randomize.value ? 200 : 14" label="Sides" v-model.number="sides.value"></slider>
-          <slider :left-icon="quantity.leftIcon" :right-icon="quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="quantity.value"></slider>
-          <slider :disabled="!roundness.enabled" :left-icon="roundness.leftIcon" :right-icon="roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="roundness.value"></slider>
-          <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="angle.min"></slider>
-          <slider :left-icon="angle.leftIcon" :right-icon="angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="angle.max"></slider>
-          <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="scaleFormula"></text-input>
-          <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="rotationFormula"></text-input>
+          <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Sides" v-model.number="appState.sides.value"></slider>
+          <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
+          <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
+          <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
+          <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
+          <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
+          <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
           <transition name="slide">
-            <div v-if="!randomize.value" >
-              <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="xPositionFormula"></text-input>
-              <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="yPositionFormula"></text-input>
+            <div v-if="!appState.randomize.value" >
+              <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
+              <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
             </div>
           </transition>
-          <select-field label="Curve Options" v-model="curve.selected" :options="curve.options"></select-field>
+          <select-field label="Curve Options" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
         </div>
       </div>
 
@@ -38,19 +38,19 @@
     <div class="paper">
       <div class="sketch">
         <Polygons
-          :scale-formula="scaleFormula"
-          :xPositionFormula="xPositionFormula"
-          :yPositionFormula="yPositionFormula"
-          :rotationFormula="rotationFormula"
-          :min-angle="angle.min"
-          :max-angle="angle.max"
-          :min-radius="radius.min"
-          :max-radius="radius.max"
-          :sides="sides.value"
-          :roundness="roundness.value"
-          :quantity="quantity.value"
-          :curve="curve.selected"
-          :randomize="randomize.value">
+          :scale-formula="appState.scaleFormula"
+          :xPositionFormula="appState.xPositionFormula"
+          :yPositionFormula="appState.yPositionFormula"
+          :rotationFormula="appState.rotationFormula"
+          :min-angle="appState.angle.min"
+          :max-angle="appState.angle.max"
+          :min-radius="appState.radius.min"
+          :max-radius="appState.radius.max"
+          :sides="appState.sides.value"
+          :roundness="appState.roundness.value"
+          :quantity="appState.quantity.value"
+          :curve="appState.curve.selected"
+          :randomize="appState.randomize.value">
         </Polygons>
       </div>
     </div>
@@ -70,106 +70,7 @@ import TextInput from './components/TextInput'
 import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
-
-function initialData () {
-  return {
-    scaleFormula: 'i+i*7',
-    rotationFormula: '10*sin(i/2)',
-    xPositionFormula: '400',
-    yPositionFormula: '400',
-    angle: {
-      leftIcon: {
-        icon: 'angle-short',
-        width: '22',
-        height: '22'
-      },
-      rightIcon: {
-        icon: 'angle-wide',
-        width: '22',
-        height: '22'
-      },
-      min: 0,
-      max: 360
-    },
-    sides: {
-      leftIcon: {
-        icon: 'triangle-large',
-        width: '22',
-        height: '22'
-      },
-      rightIcon: {
-        icon: 'hexagon',
-        width: '22',
-        height: '22'
-      },
-      value: 5
-    },
-    quantity: {
-      leftIcon: {
-        icon: 'square',
-        width: '22',
-        height: '22'
-      },
-      rightIcon: {
-        icon: 'squares',
-        width: '22',
-        height: '22'
-      },
-      value: 10
-    },
-    randomize: {
-      value: false
-    },
-    roundness: {
-      leftIcon: {
-        icon: 'line-sharp',
-        width: '22',
-        height: '22'
-      },
-      rightIcon: {
-        icon: 'line-curve',
-        width: '22',
-        height: '22'
-      },
-      value: 0.8,
-      enabled: true
-    },
-    radius: {
-      leftIcon: {
-        icon: 'triangle',
-        width: '12',
-        height: '12'
-      },
-      rightIcon: {
-        icon: 'triangle-large',
-        width: '22',
-        height: '22'
-      },
-      min: 20,
-      max: 50
-    },
-    curve: {
-      selected: 'curveCardinalClosed',
-      options: [
-        {text: 'curveCardinalClosed', value: 'curveCardinalClosed'},
-        {text: 'curveLinearClosed', value: 'curveLinearClosed'},
-        {text: 'curveBasisClosed', value: 'curveBasisClosed'},
-        {text: 'curveCatmullRomClosed', value: 'curveCatmullRomClosed'},
-        {text: 'curveNatural', value: 'curveNatural'},
-        {text: 'curveBundle', value: 'curveBundle'},
-        {text: 'curveLinear', value: 'curveLinear'},
-        {text: 'curveStep', value: 'curveStep'},
-        {text: 'curveCardinal', value: 'curveCardinal'},
-        {text: 'curveBasis', value: 'curveBasis'},
-        {text: 'curveBasisOpen', value: 'curveBasisOpen'},
-        {text: 'curveCardinalOpen', value: 'curveCardinalOpen'},
-        {text: 'curveCatmullRom', value: 'curveCatmullRom'},
-        {text: 'curveCatmullRomOpen', value: 'curveCatmullRomOpen'},
-        {text: 'curveMonotoneX', value: 'curveMonotoneX'}
-      ]
-    }
-  }
-}
+import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
 
 export default {
   name: 'App',
@@ -181,29 +82,72 @@ export default {
     Toggle
   },
   data () {
-    return initialData()
+    return {
+      appState
+    }
   },
   methods: {
     resetScaleFormula () {
-      this.scaleFormula = initialData().scaleFormula
+      this.appState.scaleFormula = defaultScaleFormula
     },
     resetRotationFormula () {
-      this.rotationFormula = initialData().rotationFormula
+      this.appState.rotationFormula = defaultRotationFormula
     },
     resetXPositionFormula () {
-      this.xPositionFormula = initialData().xPositionFormula
+      this.appState.xPositionFormula = defaultXPositionFormula
     },
     resetYPositionFormula () {
-      this.yPositionFormula = initialData().yPositionFormula
+      this.appState.yPositionFormula = defaultYPositionFormula
     },
     download () {
       eventBus.$emit('download')
     }
   },
+  mounted () {
+    const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
+    this.appState.roundness.enabled = roundnessCurveTypes.indexOf(this.appState.curve.selected) >= 0
+  },
   watch: {
-    'curve.selected' (curveType) {
+    'appState.sides.value' (value) {
+      qs.set({sd: value})
+    },
+    'appState.scaleFormula' (value) {
+      qs.set({sf: value})
+    },
+    'appState.rotationFormula' (value) {
+      qs.set({rf: value})
+    },
+    'appState.xPositionFormula' (value) {
+      qs.set({xpos: value})
+    },
+    'appState.yPositionFormula' (value) {
+      qs.set({ypos: value})
+    },
+    'appState.angle.min' (value) {
+      qs.set({mina: value})
+    },
+    'appState.angle.max' (value) {
+      qs.set({maxa: value})
+    },
+    'appState.quantity.value' (value) {
+      qs.set({qt: value})
+    },
+    'appState.randomize.value' (value) {
+      qs.set({rd: value})
+    },
+    'appState.roundness.value' (value) {
+      qs.set({rn: value})
+    },
+    'appState.radius.min' (value) {
+      qs.set({minrd: value})
+    },
+    'appState.radius.max' (value) {
+      qs.set({maxrd: value})
+    },
+    'appState.curve.selected' (value) {
+      qs.set({cv: value})
       const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
-      this.roundness.enabled = roundnessCurveTypes.indexOf(curveType) >= 0
+      this.appState.roundness.enabled = roundnessCurveTypes.indexOf(value) >= 0
     }
   }
 }
