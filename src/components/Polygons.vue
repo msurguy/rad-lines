@@ -11,7 +11,8 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
-const math = require('mathjs-expression-parser')
+
+const math = require('../lib/math').default
 const Randoma = require('randoma')
 
 let generatePoints = (seed, maxAngle, minRadius, maxRadius, breaks) => {
@@ -193,6 +194,7 @@ export default {
     },
     generatePolygonData () {
       this.polygons = []
+      math.config({randomSeed: this.seed})
       let originalPoints = this.randomize ? generatePoints(this.seed, this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
       for (let i = 0; i < this.quantity; i++) {
         try {
