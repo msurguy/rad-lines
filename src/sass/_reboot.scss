@@ -23,6 +23,7 @@
 }
 
 html {
+  height: 100%;
   font-family: sans-serif; // 2
   line-height: 1.15; // 3
   -webkit-text-size-adjust: 100%; // 4
@@ -44,6 +45,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 //    the `inherit` value on things like `<th>` elements.
 
 body {
+  height: 100%;
   margin: 0; // 1
   font-family: $font-family-base;
   @include font-size($font-size-base);
