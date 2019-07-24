@@ -55,7 +55,16 @@
           :randomize="appState.randomize.value">
         </Polygons>
       </div>
+
+      <div class="randomize-wrapper">
+        <div class="randomize">
+          <button class="btn btn-dark btn-outline" @click.prevent="randomizeSettings">
+            Randomize values
+          </button>
+        </div>
+      </div>
     </div>
+
     <div class="footer-wrapper">
         <div class="footer">
           <h1>Rad Lines</h1>
@@ -73,6 +82,8 @@ import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
+
+const Randoma = require('randoma')
 
 export default {
   name: 'App',
@@ -103,6 +114,19 @@ export default {
     },
     download () {
       eventBus.$emit('download')
+    },
+    randomizeSettings () {
+      this.appState.seed.value = Math.floor(Math.random() * Math.floor(10000))
+      const random = new Randoma({seed: this.appState.seed.value})
+      this.appState.sides.value = random.integerInRange(3, this.appState.randomize.value ? 200 : 14)
+      this.appState.angle.min = random.integerInRange(0, 360)
+      this.appState.angle.max = random.integerInRange(0, 360)
+      this.appState.quantity.value = random.integerInRange(1, 100)
+      this.appState.roundness.value = random.integerInRange(-2, 2)
+      this.appState.radius.min = random.integerInRange(0, 300 / 2)
+      if (this.appState.randomize.value) {
+        this.appState.radius.max = random.integerInRange(0, 300)
+      }
     }
   },
   mounted () {
@@ -209,6 +233,14 @@ export default {
     position: absolute;
     bottom: 0;
     right: 0;
+    color: #2D2D2D;
+  }
+
+  .randomize-wrapper {
+    z-index: 1000;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     color: #2D2D2D;
   }
 
