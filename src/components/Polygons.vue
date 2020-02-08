@@ -1,5 +1,5 @@
 <template>
-  <svg ref="renderedPolygons" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
+  <svg ref="renderedPolygons" class="svg-paper" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
     <g :transform="randomize ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
     <desc>seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
       <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize"></closed-polyline>
@@ -238,3 +238,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .svg-paper {
+    @media (max-width: 767px) {
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>

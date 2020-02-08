@@ -27,12 +27,17 @@
         </div>
       </div>
 
-      <div class="button">
+      <div class="bottom-sheet">
         <div class="reveal"></div>
-        <button class="btn btn-primary btn-block" @click.prevent="download">
-          Download SVG
-        </button>
+        <div class="d-flex pt-2 pb-2 download-wrapper">
+          <button class="btn ml-3 mr-3 btn-primary btn-block" @click.prevent="download">
+            Download SVG <svg viewBox="0 6 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <path d="M28 22 L28 30 4 30 4 22 M16 4 L16 24 M8 16 L16 24 24 16"></path>
+          </svg>
+          </button>
+        </div>
       </div>
+
     </div>
 
     <!-- Page Content -->
@@ -56,11 +61,18 @@
         </Polygons>
       </div>
     </div>
+    <div class="sharing-wrapper">
+      <span class="text-black-50 small">Share this: </span> <a target="_blank" :href="`https://twitter.com/intent/tweet?text=Rad%20Lines%20SVG%20generator&url=${sharingURL}&via=msurguy&hashtags=RadLines%2CSVG`">
+      <svg viewBox="0 0 64 64" width="22" height="22"><path stroke-width="0" fill="currentColor" d="M60 16 L54 17 L58 12 L51 14 C42 4 28 15 32 24 C16 24 8 12 8 12 C8 12 2 21 12 28 L6 26 C6 32 10 36 17 38 L10 38 C14 46 21 46 21 46 C21 46 15 51 4 51 C37 67 57 37 54 21 Z"></path> </svg>
+    </a>
+    </div>
     <div class="footer-wrapper">
-        <div class="footer">
-          <h1>Rad Lines</h1>
-          <p>Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> (<a target="_blank" href="http://github.com/msurguy/rad-lines">Source</a>)</p>
-        </div>
+      <div class="footer">
+        <h2>Rad Lines</h2>
+        <p class="small">Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> <br>
+          <a target="_blank" href="http://github.com/msurguy/rad-lines">Source</a> | <a target="_blank" href="https://github.com/sponsors/msurguy">Support</a>
+        </p>
+      </div>
       </div>
   </div>
 </template>
@@ -73,6 +85,9 @@ import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import { eventBus } from '@/main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
+import * as query from 'query-state/lib/query'
+
+const projectURL = 'https://msurguy.github.io/rad-lines/'
 
 export default {
   name: 'App',
@@ -85,7 +100,8 @@ export default {
   },
   data () {
     return {
-      appState
+      appState,
+      sharingURL: projectURL
     }
   },
   methods: {
@@ -103,13 +119,30 @@ export default {
     },
     download () {
       eventBus.$emit('download')
+    },
+    updateSharingURL (appendQuery) {
+      const queryPresent = window.location.href.indexOf('?') >= 0
+      const queryPrefix = (appendQuery || queryPresent) ? '?' : ''
+      // For twitter, we need to replace = and & with HTML encoded characters
+      const encodedURL = query.stringify(qs.get())
+      this.sharingURL = encodeURIComponent(projectURL + queryPrefix + encodedURL)
     }
   },
   mounted () {
     const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
     this.appState.roundness.enabled = roundnessCurveTypes.indexOf(this.appState.curve.selected) >= 0
+    this.updateSharingURL(false)
   },
   watch: {
+    appState: {
+      handler () {
+        // Need to wait until all items in appState is updated
+        this.$nextTick(function () {
+          this.updateSharingURL(true)
+        })
+      },
+      deep: true
+    },
     'appState.sides.value' (value) {
       qs.set({sd: value})
     },
@@ -158,8 +191,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .page {
+    min-height: 100vh;
     position: relative;
     height: 100%;
     display: flex;
@@ -169,11 +203,36 @@ export default {
     background-color: grey;
     width: 100%;
     margin-bottom: 50px;
+    position: relative;
+    height: auto;
+  }
+
+  .bottom-sheet {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 3;
+  }
+
+  .download-wrapper {
+    background-color: #393939;
   }
 
   .controls-wrapper {
     max-height: 100vh;
-    overflow: scroll;
+    overflow: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .sharing-wrapper {
+    z-index: 1001;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #2D2D2D;
+    padding: 10px;
   }
 
   .button {
@@ -195,6 +254,7 @@ export default {
     max-height: 100vh;
     width: calc(100% - 300px);
     overflow: scroll;
+    padding: 10px;
     z-index: 1;
   }
 
@@ -219,7 +279,13 @@ export default {
 
   @media (max-width: 767px) {
     .page {
-      flex-direction: column;
+      flex-direction: column-reverse;
+    }
+
+    .sharing-wrapper {
+      position: absolute;
+      left: 0;
+      padding: 15px;
     }
 
     .controls-wrapper {
@@ -233,6 +299,7 @@ export default {
     .paper {
       width: 100%;
       max-height: none;
+      overflow: hidden;
     }
 
     .footer-wrapper {

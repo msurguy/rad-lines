@@ -1,6 +1,6 @@
 import queryState from 'query-state'
 
-export const qs = queryState()
+export const qs = queryState({}, {useSearch: true})
 
 const currentStateFromQuery = qs.get()
 
