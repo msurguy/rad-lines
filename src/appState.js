@@ -55,7 +55,7 @@ export const appState = {
       width: '22',
       height: '22'
     },
-    value: currentStateFromQuery.qt || 10
+    value: currentStateFromQuery.qt || 25
   },
   randomize: {
     value: currentStateFromQuery.rd || false
