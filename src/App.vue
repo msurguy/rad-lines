@@ -1,80 +1,108 @@
 <template>
-  <div class="page">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="controls-wrapper">
-        <div class="controls">
-          <toggle label="Randomize Edges" v-model="appState.randomize.value"></toggle>
-          <slider :min="1" :max="10000" label="Seed" v-model.number="appState.seed.value"></slider>
-          <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
+  <div class="main-wrapper">
+    <div class="main-nav">
+      <div class="brand">
+        <svg xmlns="http://www.w3.org/2000/svg" width="29" height="32">
+          <g fill="none" fill-rule="evenodd" stroke="#848484">
+            <path d="M22.3 13.5c-.3-.5-8.3-.5-8.6 0-.3.5 3.7 7.5 4.3 7.5.6 0 4.6-7 4.3-7.5"/>
+            <path d="M25.9 8.3C25 7.4 7.8 11.8 7.4 13c-.3 1.2 12.1 14 13.3 13.7 1.2-.3 6.1-17.5 5.2-18.4"/>
+            <path d="M26.9 1.5C25.2.5 1.1 13.6 1 15.5c0 2 23.4 16.4 25.1 15.5 1.7-1 2.5-28.5.8-29.5"/>
+          </g>
+        </svg>
+        Rad Lines
+      </div>
+      <div class="nav-more more-tools">
+        <span class="text-black-50 small">More Tools: </span>
+        <a href="https://msurguy.github.io/flow-lines/">Flow Lines</a>
+        <a href="https://msurguy.github.io/SquiggleCam/">SquiggleCam</a>
+        <a href="https://drawingbots.net/">DrawingBots</a>
+      </div>
+      <div class="sharing-wrapper">
+        <span class="text-black-50 small">Share this: </span> <a target="_blank" :href="`https://twitter.com/intent/tweet?text=Rad%20Lines%20SVG%20generator&url=${sharingURL}&via=msurguy&hashtags=RadLines%2CSVG`">
+        <svg viewBox="0 0 64 64" width="22" height="22"><path stroke-width="0" fill="currentColor" d="M60 16 L54 17 L58 12 L51 14 C42 4 28 15 32 24 C16 24 8 12 8 12 C8 12 2 21 12 28 L6 26 C6 32 10 36 17 38 L10 38 C14 46 21 46 21 46 C21 46 15 51 4 51 C37 67 57 37 54 21 Z"></path> </svg>
+      </a>
+      </div>
+    </div>
+    <div class="page">
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="controls-wrapper">
+          <div class="controls">
+            <toggle label="Randomize Edges" v-model="appState.randomize.value"></toggle>
+            <slider :min="1" :max="10000" label="Seed" v-model.number="appState.seed.value"></slider>
+            <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
+            <transition name="slide">
+              <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
+            </transition>
+            <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Sides" v-model.number="appState.sides.value"></slider>
+            <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
+            <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
+            <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
+            <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
+            <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
+            <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
+            <transition name="slide">
+              <div v-if="!appState.randomize.value" >
+                <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
+                <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
+              </div>
+            </transition>
+            <select-field label="Curve Options" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
+          </div>
+        </div>
+
+        <div class="bottom-sheet">
+          <div class="reveal"></div>
+          <div class="d-flex pt-2 pb-2 download-wrapper">
+            <button class="btn ml-3 mr-3 btn-primary btn-block" @click.prevent="download">
+              Download SVG <svg viewBox="0 6 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+              <path d="M28 22 L28 30 4 30 4 22 M16 4 L16 24 M8 16 L16 24 24 16"></path>
+            </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Page Content -->
+      <div class="paper">
+        <div class="sketch">
+          <Polygons
+            :seed="appState.seed.value"
+            :scale-formula="appState.scaleFormula"
+            :xPositionFormula="appState.xPositionFormula"
+            :yPositionFormula="appState.yPositionFormula"
+            :rotationFormula="appState.rotationFormula"
+            :min-angle="appState.angle.min"
+            :max-angle="appState.angle.max"
+            :min-radius="appState.radius.min"
+            :max-radius="appState.radius.max"
+            :sides="appState.sides.value"
+            :roundness="appState.roundness.value"
+            :quantity="appState.quantity.value"
+            :curve="appState.curve.selected"
+            :randomize="appState.randomize.value">
+          </Polygons>
+        </div>
+      </div>
+      <div class="footer-wrapper">
+        <div class="footer">
+          <p class="small">Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> | <a target="_blank" href="https://github.com/sponsors/msurguy">Support</a> | <a target="_blank" href="http://github.com/msurguy/rad-lines">Source</a>
+            <span class="hide-on-desktop">| <a href="#more" @click="showMoreTools = !showMoreTools">More Tools</a></span>
+          </p>
           <transition name="slide">
-            <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
-          </transition>
-          <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Sides" v-model.number="appState.sides.value"></slider>
-          <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
-          <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
-          <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
-          <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
-          <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
-          <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
-          <transition name="slide">
-            <div v-if="!appState.randomize.value" >
-              <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
-              <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
+            <div v-if="showMoreTools" class="more-tools mb-2">
+              <a href="https://msurguy.github.io/flow-lines/">Flow Lines</a>
+              <a href="https://msurguy.github.io/SquiggleCam/">SquiggleCam</a>
+              <a href="https://drawingbots.net/">DrawingBots</a>
             </div>
           </transition>
-          <select-field label="Curve Options" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
         </div>
       </div>
-
-      <div class="bottom-sheet">
-        <div class="reveal"></div>
-        <div class="d-flex pt-2 pb-2 download-wrapper">
-          <button class="btn ml-3 mr-3 btn-primary btn-block" @click.prevent="download">
-            Download SVG <svg viewBox="0 6 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <path d="M28 22 L28 30 4 30 4 22 M16 4 L16 24 M8 16 L16 24 24 16"></path>
-          </svg>
-          </button>
-        </div>
-      </div>
-
     </div>
-
-    <!-- Page Content -->
-    <div class="paper">
-      <div class="sketch">
-        <Polygons
-          :seed="appState.seed.value"
-          :scale-formula="appState.scaleFormula"
-          :xPositionFormula="appState.xPositionFormula"
-          :yPositionFormula="appState.yPositionFormula"
-          :rotationFormula="appState.rotationFormula"
-          :min-angle="appState.angle.min"
-          :max-angle="appState.angle.max"
-          :min-radius="appState.radius.min"
-          :max-radius="appState.radius.max"
-          :sides="appState.sides.value"
-          :roundness="appState.roundness.value"
-          :quantity="appState.quantity.value"
-          :curve="appState.curve.selected"
-          :randomize="appState.randomize.value">
-        </Polygons>
-      </div>
-    </div>
-    <div class="sharing-wrapper">
-      <span class="text-black-50 small">Share this: </span> <a target="_blank" :href="`https://twitter.com/intent/tweet?text=Rad%20Lines%20SVG%20generator&url=${sharingURL}&via=msurguy&hashtags=RadLines%2CSVG`">
-      <svg viewBox="0 0 64 64" width="22" height="22"><path stroke-width="0" fill="currentColor" d="M60 16 L54 17 L58 12 L51 14 C42 4 28 15 32 24 C16 24 8 12 8 12 C8 12 2 21 12 28 L6 26 C6 32 10 36 17 38 L10 38 C14 46 21 46 21 46 C21 46 15 51 4 51 C37 67 57 37 54 21 Z"></path> </svg>
-    </a>
-    </div>
-    <div class="footer-wrapper">
-      <div class="footer">
-        <h2>Rad Lines</h2>
-        <p class="small">Project by <a target="_blank" href="http://twitter.com/msurguy">@msurguy</a> <br>
-          <a target="_blank" href="http://github.com/msurguy/rad-lines">Source</a> | <a target="_blank" href="https://github.com/sponsors/msurguy">Support</a>
-        </p>
-      </div>
-      </div>
   </div>
+
 </template>
 
 <script>
@@ -101,7 +129,8 @@ export default {
   data () {
     return {
       appState,
-      sharingURL: projectURL
+      sharingURL: projectURL,
+      showMoreTools: false
     }
   },
   methods: {
@@ -192,10 +221,45 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .page {
+  .main-wrapper {
     min-height: 100vh;
     position: relative;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-nav {
+    flex: 1;
+    height: 50px;
+    background-color: #ffffff;
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .brand {
+      svg {
+        margin-right: 5px;
+      }
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      color: rgba(0,0,0,0.46);
+      letter-spacing: 0;
+    }
+  }
+
+  .more-tools {
+    a {
+      margin-left: 20px;
+      text-decoration: none;
+    }
+  }
+
+  .page {
+    position: relative;
     display: flex;
   }
 
@@ -220,19 +284,15 @@ export default {
   }
 
   .controls-wrapper {
-    max-height: 100vh;
+    max-height: calc(100vh - 50px);
     overflow: auto;
     position: relative;
     z-index: 2;
   }
 
   .sharing-wrapper {
-    z-index: 1001;
-    position: absolute;
-    top: 0;
-    right: 0;
     color: #2D2D2D;
-    padding: 10px;
+    padding: 10px 0 10px 10px;
   }
 
   .button {
@@ -251,7 +311,7 @@ export default {
   .paper {
     background-color: #dedede;
     position: relative;
-    max-height: 100vh;
+    max-height: calc(100vh - 50px);
     width: calc(100% - 300px);
     overflow: scroll;
     padding: 10px;
@@ -275,17 +335,22 @@ export default {
   .footer {
     padding: 15px 15px 0 15px;
     text-align: right;
+
+    .hide-on-desktop {
+      display: none;
+    }
   }
 
   @media (max-width: 767px) {
+    .main-nav {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .nav-more {
+      display: none;
+    }
     .page {
       flex-direction: column-reverse;
-    }
-
-    .sharing-wrapper {
-      position: absolute;
-      left: 0;
-      padding: 15px;
     }
 
     .controls-wrapper {
@@ -305,6 +370,10 @@ export default {
     .footer-wrapper {
       position: relative;
       background-color: #CCC;
+
+      .hide-on-desktop {
+        display: inline-block;
+      }
     }
   }
 
