@@ -248,6 +248,7 @@ export default {
   .main-nav {
     flex: 1;
     height: 50px;
+    max-height: 50px;
     background-color: #ffffff;
     display: flex;
     padding-left: 15px;
@@ -276,6 +277,7 @@ export default {
   }
 
   .page {
+    height: calc(100vh - 50px);
     position: relative;
     display: flex;
   }
@@ -283,7 +285,7 @@ export default {
   .controls {
     background-color: grey;
     width: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 55px;
     position: relative;
     height: auto;
   }
@@ -320,8 +322,9 @@ export default {
   }
 
   .reveal {
+    pointer-events: none;
     display: block;
-    height: 15px;
+    height: 5px;
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgb(47, 47, 47) 100%);
   }
 
@@ -368,6 +371,7 @@ export default {
     }
     .page {
       flex-direction: column-reverse;
+      height: auto;
     }
 
     .controls-wrapper {
