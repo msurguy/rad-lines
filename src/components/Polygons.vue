@@ -215,8 +215,7 @@ export default {
       let svgString = (new XMLSerializer()).serializeToString(this.$refs.renderedPolygons)
 
       // reduce the SVG path by cutting off floating point values after the first digit beyond floating point (~50% less MBs)
-      svgString = svgString.replace(/([+]?\d+\.\d{3,}([eE][+]?\d+)?)/g, (x) => (+x).toFixed(1)
-      )
+      svgString = svgString.replace(/([+]?\d+\.\d{3,}([eE][+]?\d+)?)/g, (x) => (+x).toFixed(1))
       // remove Vue's data IDs
       svgString = svgString.replace(/ data-v-([0-9a-z]){8}=""/g, () => '')
 

@@ -29,26 +29,32 @@
       <div class="sidebar">
         <div class="controls-wrapper">
           <div class="controls">
-            <toggle label="Randomize Edges" v-model="appState.randomize.value"></toggle>
-            <slider :min="1" :max="10000" label="Seed" v-model.number="appState.seed.value"></slider>
-            <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
-            <transition name="slide">
-              <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
-            </transition>
-            <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Sides" v-model.number="appState.sides.value"></slider>
-            <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
-            <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
-            <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
-            <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
-            <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
-            <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
-            <transition name="slide">
-              <div v-if="!appState.randomize.value" >
-                <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
-                <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
-              </div>
-            </transition>
-            <select-field label="Curve Options" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
+            <control-group title="Shape">
+              <toggle label="Randomize Vertices" v-model="appState.randomize.value"></toggle>
+              <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
+              <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Number of Sides" v-model.number="appState.sides.value"></slider>
+              <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
+              <transition name="slide">
+                <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
+              </transition>
+              <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
+              <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
+              <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
+              <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
+              <transition name="slide">
+                <div v-if="!appState.randomize.value" >
+                  <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
+                  <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
+                </div>
+              </transition>
+            </control-group>
+            <control-group title="Line">
+              <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
+              <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
+            </control-group>
+            <control-group title="Paper">
+              <slider :min="1" :max="10000" label="Randomization Seed" v-model.number="appState.seed.value"></slider>
+            </control-group>
           </div>
         </div>
 
@@ -111,6 +117,8 @@ import Slider from './components/Slider'
 import TextInput from './components/TextInput'
 import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
+import ControlGroup from './components/ControlGroup'
+
 import { eventBus } from '@/main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
 import * as query from 'query-state/lib/query'
@@ -124,13 +132,19 @@ export default {
     Slider,
     TextInput,
     SelectField,
-    Toggle
+    Toggle,
+    ControlGroup
   },
   data () {
     return {
       appState,
       sharingURL: projectURL,
-      showMoreTools: false
+      showMoreTools: false,
+      groupToggles: {
+        paper: false,
+        shape: false,
+        line: false
+      }
     }
   },
   methods: {
@@ -155,6 +169,9 @@ export default {
       // For twitter, we need to replace = and & with HTML encoded characters
       const encodedURL = query.stringify(qs.get())
       this.sharingURL = encodeURIComponent(projectURL + queryPrefix + encodedURL)
+    },
+    toggleGroup (group) {
+      this.groupToggles[group] = !this.groupToggles[group]
     }
   },
   mounted () {
@@ -375,22 +392,5 @@ export default {
         display: inline-block;
       }
     }
-  }
-
-  .slide-enter-active,
-  .slide-leave-active {
-    transition: all 300ms ease-in-out;
-  }
-  .slide-enter-to,
-  .slide-leave {
-    max-height: 200px;
-    opacity: 1;
-    overflow: hidden;
-  }
-  .slide-enter,
-  .slide-leave-to {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
   }
 </style>
