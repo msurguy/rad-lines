@@ -51,9 +51,15 @@
             <control-group title="Line">
               <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
               <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
+              <text-input label="Color" v-model="appState.stroke.color"></text-input>
+              <text-input label="Width" v-model="appState.stroke.width"></text-input>
             </control-group>
             <control-group title="Paper">
               <slider :min="1" :max="10000" label="Randomization Seed" v-model.number="appState.seed.value"></slider>
+              <slider :min="1" :max="2000" label="Width" v-model.number="appState.paper.width"></slider>
+              <slider :min="1" :max="2000" label="Height" v-model.number="appState.paper.height"></slider>
+              <text-input label="Color" v-model="appState.paper.color"></text-input>
+              <color-picker :disable-alpha="false" @colorChange="setColor" label="Color" v-model="appState.paper.color"></color-picker>
             </control-group>
           </div>
         </div>
@@ -76,6 +82,11 @@
         <div class="sketch">
           <Polygons
             :seed="appState.seed.value"
+            :width="appState.paper.width"
+            :height="appState.paper.height"
+            :paper-color="appState.paper.color"
+            :stroke-color="appState.stroke.color"
+            :stroke-width="appState.stroke.width"
             :scale-formula="appState.scaleFormula"
             :xPositionFormula="appState.xPositionFormula"
             :yPositionFormula="appState.yPositionFormula"
@@ -169,9 +180,6 @@ export default {
       // For twitter, we need to replace = and & with HTML encoded characters
       const encodedURL = query.stringify(qs.get())
       this.sharingURL = encodeURIComponent(projectURL + queryPrefix + encodedURL)
-    },
-    toggleGroup (group) {
-      this.groupToggles[group] = !this.groupToggles[group]
     }
   },
   mounted () {
@@ -232,6 +240,21 @@ export default {
     },
     'appState.seed.value' (value) {
       qs.set({seed: value})
+    },
+    'appState.paper.width' (value) {
+      qs.set({pwidth: value})
+    },
+    'appState.paper.height' (value) {
+      qs.set({pheight: value})
+    },
+    'appState.paper.color' (value) {
+      qs.set({pcolor: value})
+    },
+    'appState.stroke.width' (value) {
+      qs.set({swidth: value})
+    },
+    'appState.stroke.color' (value) {
+      qs.set({scolor: value})
     }
   }
 }
@@ -336,6 +359,11 @@ export default {
     overflow: scroll;
     padding: 10px;
     z-index: 1;
+  }
+
+  .sketch {
+    display: inline-block;
+    border: 6px ridge #FFFFFF;
   }
 
   .sidebar {

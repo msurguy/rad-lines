@@ -14,6 +14,11 @@ export const appState = {
   rotationFormula: currentStateFromQuery.rf || defaultRotationFormula,
   xPositionFormula: currentStateFromQuery.xpos || defaultXPositionFormula,
   yPositionFormula: currentStateFromQuery.ypos || defaultYPositionFormula,
+  paper: {
+    width: currentStateFromQuery.pwidth || 800,
+    height: currentStateFromQuery.pheight || 800,
+    color: currentStateFromQuery.pcolor || '#CCC'
+  },
   seed: {
     value: currentStateFromQuery.seed || 10
   },
@@ -87,6 +92,10 @@ export const appState = {
     },
     min: currentStateFromQuery.minrd || 20,
     max: currentStateFromQuery.maxrd || 50
+  },
+  stroke: {
+    color: currentStateFromQuery.scolor || '#000000',
+    width: currentStateFromQuery.swidth || '0.4mm'
   },
   curve: {
     selected: currentStateFromQuery.cv || 'curveCardinalClosed',

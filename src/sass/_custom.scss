@@ -227,12 +227,12 @@
 .slide-enter-to,
 .slide-leave {
   max-height: 600px;
-  opacity: 1;
+  //opacity: 1;
   overflow: hidden;
 }
 .slide-enter,
 .slide-leave-to {
   max-height: 0;
-  opacity: 0;
+  //opacity: 0;
   overflow: hidden;
 }

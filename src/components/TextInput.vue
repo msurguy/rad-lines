@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="control-header">
-      <input class="control-text-input" type="text" :value="value" @change="onInput">
+      <input class="control-text-input" type="text" :value="value" @change="onInput" autocapitalize="off" autocomplete="off">
       <a class="btn" @click="$emit('reset')">reset</a>
     </div>
   </div>
