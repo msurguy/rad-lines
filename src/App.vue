@@ -129,6 +129,7 @@ import TextInput from './components/TextInput'
 import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import ControlGroup from './components/ControlGroup'
+import ColorPicker from './components/ColorPicker/ColorPicker'
 
 import { eventBus } from '@/main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
@@ -144,7 +145,8 @@ export default {
     TextInput,
     SelectField,
     Toggle,
-    ControlGroup
+    ControlGroup,
+    ColorPicker
   },
   data () {
     return {
