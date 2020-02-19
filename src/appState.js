@@ -16,8 +16,8 @@ export const appState = {
   yPositionFormula: currentStateFromQuery.ypos || defaultYPositionFormula,
   paper: {
     width: currentStateFromQuery.pwidth || 800,
-    height: currentStateFromQuery.pheight || 800,
-    color: currentStateFromQuery.pcolor || false
+    height: currentStateFromQuery.pheight || 800
+    // color: currentStateFromQuery.pcolor || false
   },
   seed: {
     value: currentStateFromQuery.seed || 10

@@ -54,10 +54,10 @@ export default {
       type: String,
       default: '10 * sin(i * pi / 9)'
     },
-    paperColor: {
-      type: String,
-      default: '#CCC'
-    },
+    // paperColor: {
+    //   type: String,
+    //   default: '#CCC'
+    // },
     strokeColor: {
       type: String,
       default: '#000000'

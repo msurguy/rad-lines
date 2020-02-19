@@ -58,7 +58,6 @@
               <slider :min="1" :max="10000" label="Randomization Seed" v-model.number="appState.seed.value"></slider>
               <slider :min="1" :max="2000" label="Width" v-model.number="appState.paper.width"></slider>
               <slider :min="1" :max="2000" label="Height" v-model.number="appState.paper.height"></slider>
-              <color-picker :show-toggle="true" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
             </control-group>
           </div>
         </div>
@@ -83,7 +82,6 @@
             :seed="appState.seed.value"
             :width="appState.paper.width"
             :height="appState.paper.height"
-            :paper-color="appState.paper.color"
             :stroke-color="appState.stroke.color"
             :stroke-width="appState.stroke.width"
             :scale-formula="appState.scaleFormula"
@@ -156,9 +154,10 @@ export default {
       strokeColor: {
         hex: appState.stroke.color
       },
-      bgColor: {
-        hex: appState.paper.color || '#CCCCCC'
-      },
+      // bgColor: {
+      //   hex: appState.paper.color || '#CCCCCC'
+      // },
+      //  <color-picker :show-toggle="true" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
       showMoreTools: false,
       groupToggles: {
         paper: false,
@@ -174,9 +173,9 @@ export default {
     setColor (value) {
       this.appState.stroke.color = value
     },
-    setBackgroundColor (value) {
-      this.appState.paper.color = value
-    },
+    // setBackgroundColor (value) {
+    //   this.appState.paper.color = value
+    // },
     resetScaleFormula () {
       this.appState.scaleFormula = defaultScaleFormula
     },
@@ -265,9 +264,9 @@ export default {
     'appState.paper.height' (value) {
       qs.set({pheight: value})
     },
-    'appState.paper.color' (value) {
-      qs.set({pcolor: value})
-    },
+    // 'appState.paper.color' (value) {
+    //   qs.set({pcolor: value})
+    // },
     'appState.stroke.width' (value) {
       qs.set({swidth: value})
     },
