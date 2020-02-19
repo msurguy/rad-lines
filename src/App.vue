@@ -29,26 +29,36 @@
       <div class="sidebar">
         <div class="controls-wrapper">
           <div class="controls">
-            <toggle label="Randomize Edges" v-model="appState.randomize.value"></toggle>
-            <slider :min="1" :max="10000" label="Seed" v-model.number="appState.seed.value"></slider>
-            <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
-            <transition name="slide">
-              <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
-            </transition>
-            <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Sides" v-model.number="appState.sides.value"></slider>
-            <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
-            <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
-            <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
-            <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
-            <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
-            <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
-            <transition name="slide">
-              <div v-if="!appState.randomize.value" >
-                <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
-                <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
-              </div>
-            </transition>
-            <select-field label="Curve Options" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
+            <control-group title="Shape">
+              <toggle label="Randomize Vertices" v-model="appState.randomize.value"></toggle>
+              <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
+              <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Number of Sides" v-model.number="appState.sides.value"></slider>
+              <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
+              <transition name="slide">
+                <slider v-if="appState.randomize.value" :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Max Radius" v-model.number="appState.radius.max"></slider>
+              </transition>
+              <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
+              <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
+              <text-input :tooltip="help.operatorsHelp" label="Scale Formula" @reset="resetScaleFormula" :show-reset="true" v-model="appState.scaleFormula"></text-input>
+              <text-input :tooltip="help.operatorsHelp" label="Rotation Formula" @reset="resetRotationFormula" :show-reset="true" v-model="appState.rotationFormula"></text-input>
+              <transition name="slide">
+                <div v-if="!appState.randomize.value" >
+                  <text-input :tooltip="help.operatorsHelp" label="X Position Formula" :show-reset="true" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
+                  <text-input :tooltip="help.operatorsHelp" label="Y Position Formula" :show-reset="true" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
+                </div>
+              </transition>
+            </control-group>
+            <control-group title="Line">
+              <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
+              <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
+              <color-picker :disable-alpha="false" @colorChange="setColor" label="Stroke" v-model="strokeColor"></color-picker>
+              <text-input :tooltip="help.width" label="Width" v-model="appState.stroke.width"></text-input>
+            </control-group>
+            <control-group title="Paper">
+              <slider :min="1" :max="10000" label="Randomization Seed" v-model.number="appState.seed.value"></slider>
+              <slider :min="1" :max="2000" label="Width" v-model.number="appState.paper.width"></slider>
+              <slider :min="1" :max="2000" label="Height" v-model.number="appState.paper.height"></slider>
+            </control-group>
           </div>
         </div>
 
@@ -70,6 +80,10 @@
         <div class="sketch">
           <Polygons
             :seed="appState.seed.value"
+            :width="appState.paper.width"
+            :height="appState.paper.height"
+            :stroke-color="appState.stroke.color"
+            :stroke-width="appState.stroke.width"
             :scale-formula="appState.scaleFormula"
             :xPositionFormula="appState.xPositionFormula"
             :yPositionFormula="appState.yPositionFormula"
@@ -111,7 +125,11 @@ import Slider from './components/Slider'
 import TextInput from './components/TextInput'
 import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
-import { eventBus } from '@/main'
+import ControlGroup from './components/ControlGroup'
+import ColorPicker from './components/ColorPicker/ColorPicker'
+import help from './help'
+
+import { eventBus } from './main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
 import * as query from 'query-state/lib/query'
 
@@ -124,16 +142,40 @@ export default {
     Slider,
     TextInput,
     SelectField,
-    Toggle
+    Toggle,
+    ControlGroup,
+    ColorPicker
   },
   data () {
     return {
+      help,
       appState,
       sharingURL: projectURL,
-      showMoreTools: false
+      strokeColor: {
+        hex: appState.stroke.color
+      },
+      // bgColor: {
+      //   hex: appState.paper.color || '#CCCCCC'
+      // },
+      //  <color-picker :show-toggle="true" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
+      showMoreTools: false,
+      groupToggles: {
+        paper: false,
+        shape: false,
+        line: false
+      }
     }
   },
   methods: {
+    toggleBackgroundColor (value) {
+      console.log(value)
+    },
+    setColor (value) {
+      this.appState.stroke.color = value
+    },
+    // setBackgroundColor (value) {
+    //   this.appState.paper.color = value
+    // },
     resetScaleFormula () {
       this.appState.scaleFormula = defaultScaleFormula
     },
@@ -215,6 +257,21 @@ export default {
     },
     'appState.seed.value' (value) {
       qs.set({seed: value})
+    },
+    'appState.paper.width' (value) {
+      qs.set({pwidth: value})
+    },
+    'appState.paper.height' (value) {
+      qs.set({pheight: value})
+    },
+    // 'appState.paper.color' (value) {
+    //   qs.set({pcolor: value})
+    // },
+    'appState.stroke.width' (value) {
+      qs.set({swidth: value})
+    },
+    'appState.stroke.color' (value) {
+      qs.set({scolor: value})
     }
   }
 }
@@ -231,6 +288,7 @@ export default {
   .main-nav {
     flex: 1;
     height: 50px;
+    max-height: 50px;
     background-color: #ffffff;
     display: flex;
     padding-left: 15px;
@@ -259,6 +317,7 @@ export default {
   }
 
   .page {
+    height: calc(100vh - 50px);
     position: relative;
     display: flex;
   }
@@ -266,7 +325,7 @@ export default {
   .controls {
     background-color: grey;
     width: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 55px;
     position: relative;
     height: auto;
   }
@@ -303,8 +362,9 @@ export default {
   }
 
   .reveal {
+    pointer-events: none;
     display: block;
-    height: 15px;
+    height: 5px;
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgb(47, 47, 47) 100%);
   }
 
@@ -316,6 +376,11 @@ export default {
     overflow: scroll;
     padding: 10px;
     z-index: 1;
+  }
+
+  .sketch {
+    display: inline-block;
+    border: 6px ridge #FFFFFF;
   }
 
   .sidebar {
@@ -351,6 +416,7 @@ export default {
     }
     .page {
       flex-direction: column-reverse;
+      height: auto;
     }
 
     .controls-wrapper {
@@ -375,22 +441,5 @@ export default {
         display: inline-block;
       }
     }
-  }
-
-  .slide-enter-active,
-  .slide-leave-active {
-    transition: all 300ms ease-in-out;
-  }
-  .slide-enter-to,
-  .slide-leave {
-    max-height: 200px;
-    opacity: 1;
-    overflow: hidden;
-  }
-  .slide-enter,
-  .slide-leave-to {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
   }
 </style>

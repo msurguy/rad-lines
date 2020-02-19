@@ -113,6 +113,9 @@ fieldset:disabled a.btn {
 }
 
 
+.btn-xsm {
+  @include button-size($btn-padding-y-xsm, $btn-padding-x-xsm, $btn-font-size-xsm, $btn-line-height-xsm, $btn-border-radius-sm);
+}
 //
 // Block button
 //

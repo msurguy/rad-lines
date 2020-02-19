@@ -1,5 +1,5 @@
 <template>
-  <path stroke="#000000" stroke-width="0.4mm" fill="none" :d="line"></path>
+  <path :stroke="strokeColor" :stroke-width="strokeWidth" fill="none" :d="line"></path>
 </template>
 
 <script>
@@ -31,6 +31,14 @@ export default {
     randomize: {
       type: Boolean,
       default: false
+    },
+    strokeColor: {
+      type: String,
+      default: '#000000'
+    },
+    strokeWidth: {
+      type: String,
+      default: '0.4mm'
     }
   },
   computed: {

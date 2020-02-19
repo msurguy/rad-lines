@@ -1,8 +1,8 @@
 <template>
   <svg ref="renderedPolygons" class="svg-paper" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
     <g :transform="randomize ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
-    <desc>seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
-      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize"></closed-polyline>
+    <desc>pwidth:{{width}};pheight:{{height}};pcolor:{{color}};seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
+      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize" :stroke-width="strokeWidth" :stroke-color="strokeColor"></closed-polyline>
     </g>
   </svg>
 </template>
@@ -53,6 +53,18 @@ export default {
     rotationFormula: {
       type: String,
       default: '10 * sin(i * pi / 9)'
+    },
+    // paperColor: {
+    //   type: String,
+    //   default: '#CCC'
+    // },
+    strokeColor: {
+      type: String,
+      default: '#000000'
+    },
+    strokeWidth: {
+      type: String,
+      default: '0.4mm'
     },
     xPositionFormula: {
       type: String,
@@ -177,6 +189,12 @@ export default {
     },
     seed () {
       this.generatePolygonData()
+    },
+    strokeWidth () {
+      this.generatePolygonData()
+    },
+    strokeColor () {
+      this.generatePolygonData()
     }
   },
   methods: {
@@ -215,8 +233,7 @@ export default {
       let svgString = (new XMLSerializer()).serializeToString(this.$refs.renderedPolygons)
 
       // reduce the SVG path by cutting off floating point values after the first digit beyond floating point (~50% less MBs)
-      svgString = svgString.replace(/([+]?\d+\.\d{3,}([eE][+]?\d+)?)/g, (x) => (+x).toFixed(1)
-      )
+      svgString = svgString.replace(/([+]?\d+\.\d{3,}([eE][+]?\d+)?)/g, (x) => (+x).toFixed(1))
       // remove Vue's data IDs
       svgString = svgString.replace(/ data-v-([0-9a-z]){8}=""/g, () => '')
 

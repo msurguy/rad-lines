@@ -219,3 +219,20 @@
 .svg-left {
   transform: rotate(-90deg);
 }
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 300ms ease-in-out;
+}
+.slide-enter-to,
+.slide-leave {
+  max-height: 600px;
+  //opacity: 1;
+  overflow: hidden;
+}
+.slide-enter,
+.slide-leave-to {
+  max-height: 0;
+  //opacity: 0;
+  overflow: hidden;
+}
