@@ -19,7 +19,8 @@
     "vue": "^2.5.2",
     "vue-popperjs": "^2.0.4",
     "clamp": "^1.0.1",
-    "tinycolor2": "^1.4.1"
+    "tinycolor2": "^1.4.1",
+    "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

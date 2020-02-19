@@ -1,6 +1,10 @@
 <template>
   <div class="sidebar-control">
     <div class="control-header">
+      <div class="custom-controls custom-switch" v-if="showToggle">
+        <input :id="`${labelId}-toggle`" type="checkbox" class="custom-control-input" :value="toggleValue" :checked="!!toggleValue" @change="onToggle">
+        <label class="custom-control-label" :for="`${labelId}-toggle`"></label>
+      </div>
       <label :for="labelId" class="control-label color-control-label" :id="labelId">{{ label }}</label>
       <div class="color-indicator-wrapper">
         <div class="color-indicator" :style="{ 'background-color': `#${hex}` }" @click="toggleColorPicker"></div>
@@ -107,6 +111,14 @@ export default {
     checkboard
   },
   props: {
+    showToggle: {
+      type: Boolean,
+      default: false
+    },
+    toggleValue: {
+      type: Boolean,
+      default: false
+    },
     presetColors: {
       type: Array,
       default () {
@@ -145,6 +157,9 @@ export default {
     }
   },
   methods: {
+    onToggle ($event) {
+      this.$emit('toggle', $event.target.checked)
+    },
     toggleColorPicker () {
       this.showColorPicker = !this.showColorPicker
     },

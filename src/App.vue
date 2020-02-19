@@ -39,27 +39,26 @@
               </transition>
               <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
               <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
-              <text-input label="Scale Formula" @reset="resetScaleFormula" v-model="appState.scaleFormula"></text-input>
-              <text-input label="Rotation Formula" @reset="resetRotationFormula" v-model="appState.rotationFormula"></text-input>
+              <text-input :tooltip="help.operatorsHelp" label="Scale Formula" @reset="resetScaleFormula" :show-reset="true" v-model="appState.scaleFormula"></text-input>
+              <text-input :tooltip="help.operatorsHelp" label="Rotation Formula" @reset="resetRotationFormula" :show-reset="true" v-model="appState.rotationFormula"></text-input>
               <transition name="slide">
                 <div v-if="!appState.randomize.value" >
-                  <text-input label="X Position Formula" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
-                  <text-input label="Y Position Formula" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
+                  <text-input :tooltip="help.operatorsHelp" label="X Position Formula" :show-reset="true" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
+                  <text-input :tooltip="help.operatorsHelp" label="Y Position Formula" :show-reset="true" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
                 </div>
               </transition>
             </control-group>
             <control-group title="Line">
               <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
               <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
-              <text-input label="Color" v-model="appState.stroke.color"></text-input>
-              <text-input label="Width" v-model="appState.stroke.width"></text-input>
+              <color-picker :disable-alpha="false" @colorChange="setColor" label="Stroke" v-model="strokeColor"></color-picker>
+              <text-input :tooltip="help.width" label="Width" v-model="appState.stroke.width"></text-input>
             </control-group>
             <control-group title="Paper">
               <slider :min="1" :max="10000" label="Randomization Seed" v-model.number="appState.seed.value"></slider>
               <slider :min="1" :max="2000" label="Width" v-model.number="appState.paper.width"></slider>
               <slider :min="1" :max="2000" label="Height" v-model.number="appState.paper.height"></slider>
-              <text-input label="Color" v-model="appState.paper.color"></text-input>
-              <color-picker :disable-alpha="false" @colorChange="setColor" label="Color" v-model="appState.paper.color"></color-picker>
+              <color-picker :show-toggle="true" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
             </control-group>
           </div>
         </div>
@@ -130,8 +129,9 @@ import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import ControlGroup from './components/ControlGroup'
 import ColorPicker from './components/ColorPicker/ColorPicker'
+import help from './help'
 
-import { eventBus } from '@/main'
+import { eventBus } from './main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
 import * as query from 'query-state/lib/query'
 
@@ -150,8 +150,15 @@ export default {
   },
   data () {
     return {
+      help,
       appState,
       sharingURL: projectURL,
+      strokeColor: {
+        hex: appState.stroke.color
+      },
+      bgColor: {
+        hex: appState.paper.color || '#CCCCCC'
+      },
       showMoreTools: false,
       groupToggles: {
         paper: false,
@@ -161,6 +168,15 @@ export default {
     }
   },
   methods: {
+    toggleBackgroundColor (value) {
+      console.log(value)
+    },
+    setColor (value) {
+      this.appState.stroke.color = value
+    },
+    setBackgroundColor (value) {
+      this.appState.paper.color = value
+    },
     resetScaleFormula () {
       this.appState.scaleFormula = defaultScaleFormula
     },

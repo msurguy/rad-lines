@@ -17,7 +17,7 @@ export const appState = {
   paper: {
     width: currentStateFromQuery.pwidth || 800,
     height: currentStateFromQuery.pheight || 800,
-    color: currentStateFromQuery.pcolor || '#CCC'
+    color: currentStateFromQuery.pcolor || false
   },
   seed: {
     value: currentStateFromQuery.seed || 10
