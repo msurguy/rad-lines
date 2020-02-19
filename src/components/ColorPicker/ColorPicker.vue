@@ -338,5 +338,6 @@ export default {
   .color-control-text-input {
     display: inline-block;
     width: 70px;
+    flex: auto;
   }
 </style>
