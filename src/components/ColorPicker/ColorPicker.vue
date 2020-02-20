@@ -159,6 +159,7 @@ export default {
   methods: {
     onToggle ($event) {
       this.$emit('toggle', $event.target.checked)
+      this.$emit('colorChange', `#${this.hex}`)
     },
     toggleColorPicker () {
       this.showColorPicker = !this.showColorPicker

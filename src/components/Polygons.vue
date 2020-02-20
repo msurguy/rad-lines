@@ -1,7 +1,8 @@
 <template>
   <svg ref="renderedPolygons" class="svg-paper" :width="width" :height="height" title="polygons" version="1.1" :viewBox="`0 0 ${width} ${height}`" xmlns="http://www.w3.org/2000/svg">
-    <g :transform="randomize ? `translate(${width/2}, ${height/2})` : 'translate(0, 0)' ">
-    <desc>pwidth:{{width}};pheight:{{height}};pcolor:{{color}};seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
+    <rect v-if="paperColorEnabled" :width="width" :height="height" :fill="paperColor"></rect>
+    <g :transform="randomize ? `translate(${width/2}, ${height/2})` : false ">
+    <desc>pwidth:{{width}};pheight:{{height}};pcolor:{{paperColor}};seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
       <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize" :stroke-width="strokeWidth" :stroke-color="strokeColor"></closed-polyline>
     </g>
   </svg>
@@ -54,10 +55,14 @@ export default {
       type: String,
       default: '10 * sin(i * pi / 9)'
     },
-    // paperColor: {
-    //   type: String,
-    //   default: '#CCC'
-    // },
+    paperColor: {
+      type: String,
+      default: '#CCCCCC'
+    },
+    paperColorEnabled: {
+      type: Boolean,
+      default: true
+    },
     strokeColor: {
       type: String,
       default: '#000000'

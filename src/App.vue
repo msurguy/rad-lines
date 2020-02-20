@@ -39,12 +39,12 @@
               </transition>
               <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Starting Angle" v-model.number="appState.angle.min"></slider>
               <slider :left-icon="appState.angle.leftIcon" :right-icon="appState.angle.rightIcon" :step="1" :min="0" :max="360" label="Arc Extent" v-model.number="appState.angle.max"></slider>
-              <text-input :tooltip="help.operatorsHelp" label="Scale Formula" @reset="resetScaleFormula" :show-reset="true" v-model="appState.scaleFormula"></text-input>
-              <text-input :tooltip="help.operatorsHelp" label="Rotation Formula" @reset="resetRotationFormula" :show-reset="true" v-model="appState.rotationFormula"></text-input>
+              <text-input :tooltip="helpStrings.operatorsHelp" label="Scale Formula" @reset="resetScaleFormula" :show-reset="true" v-model="appState.scaleFormula"></text-input>
+              <text-input :tooltip="helpStrings.operatorsHelp" label="Rotation Formula" @reset="resetRotationFormula" :show-reset="true" v-model="appState.rotationFormula"></text-input>
               <transition name="slide">
                 <div v-if="!appState.randomize.value" >
-                  <text-input :tooltip="help.operatorsHelp" label="X Position Formula" :show-reset="true" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
-                  <text-input :tooltip="help.operatorsHelp" label="Y Position Formula" :show-reset="true" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
+                  <text-input :tooltip="helpStrings.operatorsHelp" label="X Position Formula" :show-reset="true" @reset="resetXPositionFormula" v-model="appState.xPositionFormula"></text-input>
+                  <text-input :tooltip="helpStrings.operatorsHelp" label="Y Position Formula" :show-reset="true" @reset="resetYPositionFormula" v-model="appState.yPositionFormula"></text-input>
                 </div>
               </transition>
             </control-group>
@@ -52,9 +52,10 @@
               <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
               <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
               <color-picker :disable-alpha="false" @colorChange="setColor" label="Stroke" v-model="strokeColor"></color-picker>
-              <text-input :tooltip="help.width" label="Width" v-model="appState.stroke.width"></text-input>
+              <text-input :tooltip="helpStrings.width" label="Width" v-model="appState.stroke.width"></text-input>
             </control-group>
             <control-group title="Paper">
+              <color-picker :show-toggle="true" :toggle-value="bgColorEnabled" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
               <slider :min="1" :max="10000" label="Randomization Seed" v-model.number="appState.seed.value"></slider>
               <slider :min="1" :max="2000" label="Width" v-model.number="appState.paper.width"></slider>
               <slider :min="1" :max="2000" label="Height" v-model.number="appState.paper.height"></slider>
@@ -84,6 +85,8 @@
             :height="appState.paper.height"
             :stroke-color="appState.stroke.color"
             :stroke-width="appState.stroke.width"
+            :paper-color-enabled="bgColorEnabled"
+            :paper-color="appState.paper.color"
             :scale-formula="appState.scaleFormula"
             :xPositionFormula="appState.xPositionFormula"
             :yPositionFormula="appState.yPositionFormula"
@@ -127,7 +130,7 @@ import Toggle from './components/Toggle'
 import SelectField from './components/SelectField'
 import ControlGroup from './components/ControlGroup'
 import ColorPicker from './components/ColorPicker/ColorPicker'
-import help from './help'
+import helpStrings from './helpStrings'
 
 import { eventBus } from './main'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
@@ -148,16 +151,16 @@ export default {
   },
   data () {
     return {
-      help,
+      helpStrings,
       appState,
       sharingURL: projectURL,
       strokeColor: {
         hex: appState.stroke.color
       },
-      // bgColor: {
-      //   hex: appState.paper.color || '#CCCCCC'
-      // },
-      //  <color-picker :show-toggle="true" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
+      bgColor: {
+        hex: appState.paper.color
+      },
+      bgColorEnabled: false,
       showMoreTools: false,
       groupToggles: {
         paper: false,
@@ -168,14 +171,14 @@ export default {
   },
   methods: {
     toggleBackgroundColor (value) {
-      console.log(value)
+      this.bgColorEnabled = value
     },
     setColor (value) {
       this.appState.stroke.color = value
     },
-    // setBackgroundColor (value) {
-    //   this.appState.paper.color = value
-    // },
+    setBackgroundColor (value) {
+      this.appState.paper.color = value
+    },
     resetScaleFormula () {
       this.appState.scaleFormula = defaultScaleFormula
     },
@@ -202,6 +205,7 @@ export default {
   mounted () {
     const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
     this.appState.roundness.enabled = roundnessCurveTypes.indexOf(this.appState.curve.selected) >= 0
+    this.bgColorEnabled = this.appState.paper.color !== null
     this.updateSharingURL(false)
   },
   watch: {
@@ -213,6 +217,14 @@ export default {
         })
       },
       deep: true
+    },
+    bgColorEnabled (value) {
+      if (value) {
+        this.appState.paper.color = this.bgColor.hex
+      } else {
+        this.appState.paper.color = null
+        qs.unset('pcolor')
+      }
     },
     'appState.sides.value' (value) {
       qs.set({sd: value})
@@ -264,9 +276,10 @@ export default {
     'appState.paper.height' (value) {
       qs.set({pheight: value})
     },
-    // 'appState.paper.color' (value) {
-    //   qs.set({pcolor: value})
-    // },
+    'appState.paper.color' (value) {
+      if (value) qs.set({pcolor: value})
+      else qs.unset('pcolor')
+    },
     'appState.stroke.width' (value) {
       qs.set({swidth: value})
     },
