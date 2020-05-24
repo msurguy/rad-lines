@@ -7973,6 +7973,11 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-analytics@^5.18.0:
+  version "5.22.1"
+  resolved "https://registry.yarnpkg.com/vue-analytics/-/vue-analytics-5.22.1.tgz#9d6b32da56daee1b9dfb23a267b50349a03f710f"
+  integrity sha512-HPKQMN7gfcUqS5SxoO0VxqLRRSPkG1H1FqglsHccz6BatBatNtm/Vyy8brApktZxNCfnAkrSVDpxg3/FNDeOgQ==
+
 vue-cli-plugin-scss-base@^0.1.10:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-scss-base/-/vue-cli-plugin-scss-base-0.1.10.tgz#688c026ff8b857558b5538f46a81ddee37a65807"
