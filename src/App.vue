@@ -207,6 +207,7 @@ export default {
     this.appState.roundness.enabled = roundnessCurveTypes.indexOf(this.appState.curve.selected) >= 0
     this.bgColorEnabled = this.appState.paper.color !== null
     this.updateSharingURL(false)
+    this.$ga.page('/')
   },
   watch: {
     appState: {
