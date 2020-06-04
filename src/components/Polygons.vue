@@ -12,7 +12,7 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
-
+const downloadSVG = require('svg-file-downloader')
 const math = require('../lib/math').default
 const Randoma = require('randoma')
 
@@ -143,7 +143,7 @@ export default {
   },
   created () {
     eventBus.$on('download', () => {
-      this.downloadSVG()
+      downloadSVG(this.$refs.renderedPolygons, 2, 'rad-lines' + Date.now() + '.svg', true)
     })
   },
   watch: {
@@ -230,29 +230,6 @@ export default {
           console.log(e)
         }
       }
-    },
-    downloadSVG () {
-      const svgDoctype = '<?xml version="1.0" standalone="no"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
-
-      // serialize our SVG XML to a string.
-      let svgString = (new XMLSerializer()).serializeToString(this.$refs.renderedPolygons)
-
-      // reduce the SVG path by cutting off floating point values after the first digit beyond floating point (~50% less MBs)
-      svgString = svgString.replace(/([+]?\d+\.\d{3,}([eE][+]?\d+)?)/g, (x) => (+x).toFixed(1))
-      // remove Vue's data IDs
-      svgString = svgString.replace(/ data-v-([0-9a-z]){8}=""/g, () => '')
-
-      const blob = new Blob([svgDoctype + svgString], {type: 'image/svg+xml;charset=utf-8'})
-
-      /* This portion of script saves the file to local filesystem as a download */
-      let svgUrl = URL.createObjectURL(blob)
-
-      const downloadLink = document.createElement('a')
-      downloadLink.href = svgUrl
-      downloadLink.download = 'polygons' + Date.now() + '.svg'
-      document.body.appendChild(downloadLink)
-      downloadLink.click()
-      document.body.removeChild(downloadLink)
     }
   },
   mounted () {

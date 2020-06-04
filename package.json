@@ -21,7 +21,8 @@
     "clamp": "^1.0.1",
     "tinycolor2": "^1.4.1",
     "lodash.throttle": "^4.1.1",
-    "vue-analytics": "^5.18.0"
+    "vue-analytics": "^5.18.0",
+    "svg-file-downloader": "0.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
