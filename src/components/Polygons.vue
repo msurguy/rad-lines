@@ -3,7 +3,7 @@
     <rect v-if="paperColorEnabled" :width="width" :height="height" :fill="paperColor"></rect>
     <g :transform="randomize ? `translate(${width/2}, ${height/2})` : false ">
     <desc>pwidth:{{width}};pheight:{{height}};pcolor:{{paperColor}};seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
-      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize" :stroke-width="strokeWidth" :stroke-color="strokeColor"></closed-polyline>
+      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon.points" :curve="curve" :randomize="randomize" :stroke-width="strokeWidth" :stroke-color="strokeColor" :fill="polygon.fill"></closed-polyline>
     </g>
   </svg>
 </template>
@@ -12,6 +12,11 @@
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
 import ClosedPolyline from './ClosedPolyline'
+import {
+  scaleSequential, //, interpolateSpectral, interpolateRdYlGn, interpolateGreys, interpolatePlasma, interpolateCool,
+  interpolateRainbow
+} from 'd3'
+
 const downloadSVG = require('svg-file-downloader')
 const math = require('../lib/math').default
 const Randoma = require('randoma')
@@ -218,13 +223,18 @@ export default {
     generatePolygonData () {
       this.polygons = []
       math.config({randomSeed: this.seed})
+      const color = scaleSequential(interpolateRainbow).domain([0, this.quantity])
       let originalPoints = this.randomize ? generatePoints(this.seed, this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
-      for (let i = 0; i < this.quantity; i++) {
+      for (let i = this.quantity; i > 0; i--) {
         try {
           if (this.randomize) {
-            this.polygons.push(transformPoints(originalPoints, math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i})))
+            this.polygons.push({
+              fill: color(i),
+              points: transformPoints(originalPoints, math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}))})
           } else {
-            this.polygons.push(this.createPolygon(math.eval(this.xPositionFormula, { i: i}), math.eval(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}), this.maxAngle))
+            this.polygons.push({
+              fill: color(i),
+              points: this.createPolygon(math.eval(this.xPositionFormula, { i: i}), math.eval(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}), this.maxAngle)})
           }
         } catch (e) {
           console.log(e)

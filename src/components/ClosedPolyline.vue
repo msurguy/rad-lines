@@ -1,5 +1,5 @@
 <template>
-  <path :stroke="strokeColor" :stroke-width="strokeWidth" fill="none" :d="line"></path>
+  <path :stroke="strokeColor" :stroke-width="strokeWidth" :fill="fill" :d="line"></path>
 </template>
 
 <script>
@@ -19,6 +19,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    fill: {
+      type: String,
+      default: 'none'
     },
     roundness: {
       type: Number,

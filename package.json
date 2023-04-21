@@ -66,7 +66,7 @@
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue-cli-plugin-scss-base": "^0.1.10",
-    "vue-loader": "^13.3.0",
+    "vue-loader": "^14.0.0",
     "vue-style-loader": "^3.0.1",
     "vue-svgicon": "^3.2.2",
     "vue-template-compiler": "^2.5.2",
