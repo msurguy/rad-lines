@@ -68,6 +68,7 @@ export default {
       default: '#000000'
     },
     strokeWidth: {
+      type: String,
       default: '0.4mm'
     },
     xPositionFormula: {

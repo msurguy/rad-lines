@@ -43,6 +43,6 @@ const customFunctions = {
   // null: null,
 };
 
-math.import(customFunctions);
+// math.import(customFunctions);
 
 export default math;

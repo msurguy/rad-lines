@@ -13,8 +13,14 @@ const icon = (icon, width = '22', height = '22') => ({ icon, width, height })
 export const appState = {
   scaleFormula: currentStateFromQuery.sf || defaultScaleFormula,
   rotationFormula: currentStateFromQuery.rf || defaultRotationFormula,
-  xPositionFormula: currentStateFromQuery.xpos + '' || defaultXPositionFormula,
-  yPositionFormula: currentStateFromQuery.ypos + '' || defaultYPositionFormula,
+  xPositionFormula:
+    currentStateFromQuery.xpos !== undefined
+      ? String(currentStateFromQuery.xpos)
+      : defaultXPositionFormula,
+  yPositionFormula:
+    currentStateFromQuery.ypos !== undefined
+      ? String(currentStateFromQuery.ypos)
+      : defaultYPositionFormula,
   paper: {
     width: currentStateFromQuery.pwidth || 800,
     height: currentStateFromQuery.pheight  || 800,
@@ -56,7 +62,10 @@ export const appState = {
   },
   stroke: {
     color: currentStateFromQuery.scolor || '#000000',
-    width: currentStateFromQuery.swidth + '' || '0.4mm',
+    width:
+      currentStateFromQuery.swidth !== undefined
+        ? String(currentStateFromQuery.swidth)
+        : '0.4mm',
   },
   curve: {
     selected: currentStateFromQuery.cv || 'curveCardinalClosed',
