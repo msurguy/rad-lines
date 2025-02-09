@@ -10,9 +10,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'docs',
-
   },
-  base: '/rad-lines/',  // Replace with your GitHub repo name
+  // base: '/rad-lines/',  // Replace with your GitHub repo name
 
   server: {
     port: 3000,
