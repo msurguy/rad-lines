@@ -11,6 +11,7 @@ export default defineConfig({
   build: {
     outDir: 'docs',
   },
+  base: './',
   // base: '/rad-lines/',  // Replace with your GitHub repo name
 
   server: {
