@@ -11,10 +11,10 @@
 <script>
 /* eslint-disable standard/object-curly-even-spacing,no-new-func */
 import {eventBus} from '@/main'
-import ClosedPolyline from './ClosedPolyline'
-const downloadSVG = require('svg-file-downloader')
-const math = require('../lib/math').default
-const Randoma = require('randoma')
+import ClosedPolyline from './ClosedPolyline.vue'
+import downloadSVG from 'svg-file-downloader';
+import math from '../lib/math';
+import Randoma from 'randoma';
 
 let generatePoints = (seed, maxAngle, minRadius, maxRadius, breaks) => {
   const random = new Randoma({seed: seed})
@@ -68,7 +68,6 @@ export default {
       default: '#000000'
     },
     strokeWidth: {
-      type: String,
       default: '0.4mm'
     },
     xPositionFormula: {
@@ -222,9 +221,9 @@ export default {
       for (let i = 0; i < this.quantity; i++) {
         try {
           if (this.randomize) {
-            this.polygons.push(transformPoints(originalPoints, math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i})))
+            this.polygons.push(transformPoints(originalPoints, math.evaluate(this.scaleFormula, { i: i}), this.minAngle + math.evaluate(this.rotationFormula, { i: i})))
           } else {
-            this.polygons.push(this.createPolygon(math.eval(this.xPositionFormula, { i: i}), math.eval(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.eval(this.scaleFormula, { i: i}), this.minAngle + math.eval(this.rotationFormula, { i: i}), this.maxAngle))
+            this.polygons.push(this.createPolygon(math.evaluate(this.xPositionFormula, { i: i}), math.evaluate(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.evaluate(this.scaleFormula, { i: i}), this.minAngle + math.evaluate(this.rotationFormula, { i: i}), this.maxAngle))
           }
         } catch (e) {
           console.log(e)

@@ -1,19 +1,21 @@
 # Rad Lines
 
-> A Vue.js project for generating SVGs of polygons for plotting.
+Rad Lines: Create Plotter-Friendly SVG Patterns Instantly
 
-# Interface
+Design unique, plotter-ready SVG patterns with customizable shapes, rotation formulas, and more. Instantly download your creations for use with CNC, laser cutters, or drawing robots.
 
-![Video](docs/polygontool.gif)
+# Interface demo
+
+![Video](demo/polygontool.gif)
 
 # Samples
 
 Here are some samples of artworks created with this tool:
 
-![Sample 1](docs/sample-1.png)
-![Sample 2](docs/sample-2.png)
-![Sample 3](docs/sample-3.png)
-![Sample 4](docs/sample-4.png)
+![Sample 1](demo/sample-1.png)
+![Sample 2](demo/sample-2.png)
+![Sample 3](demo/sample-3.png)
+![Sample 4](demo/sample-4.png)
 
 # Support Creator
 
@@ -27,14 +29,11 @@ If you find this tool useful, I'd like to encourage you to support my efforts by
 
 ``` bash
 # install dependencies
-npm install
+yarn install
 
-# serve with hot reload at localhost:8080
-npm run dev
+# serve with hot reload
+yarn run dev
 
 # build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+yarn run build
 ```

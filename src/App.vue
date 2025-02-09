@@ -123,16 +123,16 @@
 </template>
 
 <script>
-import Polygons from './components/Polygons'
-import Slider from './components/Slider'
-import TextInput from './components/TextInput'
-import Toggle from './components/Toggle'
-import SelectField from './components/SelectField'
-import ControlGroup from './components/ControlGroup'
-import ColorPicker from './components/ColorPicker/ColorPicker'
-import helpStrings from './helpStrings'
+import Polygons from './components/Polygons.vue'
+import Slider from './components/Slider.vue'
+import TextInput from './components/TextInput.vue'
+import Toggle from './components/Toggle.vue'
+import SelectField from './components/SelectField.vue'
+import ControlGroup from './components/ControlGroup.vue'
+import ColorPicker from './components/ColorPicker/ColorPicker.vue'
+import helpStrings from './helpStrings.js'
 
-import { eventBus } from './main'
+import { eventBus } from './main.js'
 import { appState, qs, defaultRotationFormula, defaultScaleFormula, defaultXPositionFormula, defaultYPositionFormula } from './appState'
 import * as query from 'query-state/lib/query'
 
@@ -202,8 +202,8 @@ export default {
       this.sharingURL = encodeURIComponent(projectURL + queryPrefix + encodedURL)
     }
   },
-  mounted () {
-    const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom', 'curveCatmullRomClosed', 'curveCatmullRomOpen']
+  mounted() {
+    const roundnessCurveTypes = ['curveCardinalClosed', 'curveBundle', 'curveCardinal', 'curveCardinalOpen', 'curveCatmullRom','curveCatmullRomClosed', 'curveCatmullRomOpen']
     this.appState.roundness.enabled = roundnessCurveTypes.indexOf(this.appState.curve.selected) >= 0
     this.bgColorEnabled = this.appState.paper.color !== null
     this.updateSharingURL(false)

@@ -1,5 +1,7 @@
 /* eslint-disable */
-var icon = require('vue-svgicon')
+/* tslint:disable */
+// @ts-ignore
+import icon from 'vue-svgicon'
 icon.register({
   'triangle-large': {
     width: 16,
