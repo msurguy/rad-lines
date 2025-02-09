@@ -24,6 +24,7 @@
     "vite": "^6.1.0",
     "vue": "^2.7.16",
     "vue-analytics": "^5.22.1",
+    "vue-gtag": "^1.16.1",
     "vue-popperjs": "^2.3.0",
     "vue-svgicon": "^3.3.2",
     "vue-template-compiler": "^2.7.16"

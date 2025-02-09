@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import './sass/bootstrap.scss'
 import SvgIcon from 'vue-svgicon'
-import VueAnalytics from 'vue-analytics'
+import VueGtag from "vue-gtag";
 
 export const eventBus = new Vue()
 
@@ -15,9 +15,9 @@ Vue.use(SvgIcon, {
   tagName: 'svgicon'
 })
 
-Vue.use(VueAnalytics, {
-  id: 'UA-167408902-1'
-})
+Vue.use(VueGtag, {
+  config: { id: "G-PXKJMQHXV3" }
+});
 
 /* eslint-disable no-new */
 
