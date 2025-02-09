@@ -41,12 +41,49 @@ let degreesToRadians = (degrees) => {
   return degrees * (Math.PI / 180)
 }
 
+let getPathPoints = (pathStr, numPoints = 100) => {
+  // Create a temporary SVG and path element.
+  const tempSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const tempPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  tempPath.setAttribute("d", pathStr);
+  tempSvg.appendChild(tempPath);
+  document.body.appendChild(tempSvg); // attach so that getTotalLength works reliably
+
+  const pathLength = tempPath.getTotalLength();
+  let points = [];
+  for (let i = 0; i < numPoints; i++) {
+    const pt = tempPath.getPointAtLength(pathLength * i / (numPoints - 1));
+    points.push([pt.x, pt.y]);
+  }
+  document.body.removeChild(tempSvg);
+  return points;
+};
+
+// Applies a scale, rotation (in degrees), and translation (tx, ty) to an array of Cartesian points.
+let transformCustomPathPoints = (points, scale, rotation, tx, ty) => {
+  const rad = rotation * (Math.PI / 180);
+  return points.map(p => {
+    // First scale the point.
+    let xScaled = p[0] * scale;
+    let yScaled = p[1] * scale;
+    // Then rotate it.
+    let xRotated = xScaled * Math.cos(rad) - yScaled * Math.sin(rad);
+    let yRotated = xScaled * Math.sin(rad) + yScaled * Math.cos(rad);
+    // Finally, translate it.
+    return [xRotated + tx, yRotated + ty];
+  });
+};
+
 export default {
   name: 'Polygons',
   components: {
     ClosedPolyline
   },
   props: {
+    customPath: {
+      type: String,
+      default: ''
+    },
     scaleFormula: {
       type: String,
       default: 'i*i/2'
@@ -200,6 +237,9 @@ export default {
     },
     strokeColor () {
       this.generatePolygonData()
+    },
+    customPath() {
+      this.generatePolygonData();
     }
   },
   methods: {
@@ -215,22 +255,61 @@ export default {
       }
       return arr
     },
-    generatePolygonData () {
-      this.polygons = []
-      math.config({randomSeed: this.seed})
-      let originalPoints = this.randomize ? generatePoints(this.seed, this.maxAngle, this.minRadius, this.maxRadius, this.sides) : []
+      generatePolygonData () {
+    this.polygons = [];
+    math.config({randomSeed: this.seed});
+
+    if (this.customPath && this.customPath.trim() !== "") {
+      // Custom path branch:
+      const basePoints = getPathPoints(this.customPath, 100); // sample 100 points along the path
+      for (let i = 0; i < this.quantity; i++) {
+        try {
+          // Evaluate transformation formulas for instance i.
+          const scaleVal    = math.evaluate(this.scaleFormula, { i: i });
+          const rotationVal = math.evaluate(this.rotationFormula, { i: i });
+          const tx          = math.evaluate(this.xPositionFormula, { i: i });
+          const ty          = math.evaluate(this.yPositionFormula, { i: i });
+          // Transform the sampled points from the custom path.
+          const transformedPoints = transformCustomPathPoints(basePoints, scaleVal, rotationVal, tx, ty);
+
+          this.polygons.push(transformedPoints);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    } else {
+      // Existing polygon generation logic.
+      let originalPoints = this.randomize
+          ? generatePoints(this.seed, this.maxAngle, this.minRadius, this.maxRadius, this.sides)
+          : [];
       for (let i = 0; i < this.quantity; i++) {
         try {
           if (this.randomize) {
-            this.polygons.push(transformPoints(originalPoints, math.evaluate(this.scaleFormula, { i: i}), this.minAngle + math.evaluate(this.rotationFormula, { i: i})))
+            this.polygons.push(
+              transformPoints(
+                originalPoints,
+                math.evaluate(this.scaleFormula, { i: i }),
+                this.minAngle + math.evaluate(this.rotationFormula, { i: i})
+              )
+            );
           } else {
-            this.polygons.push(this.createPolygon(math.evaluate(this.xPositionFormula, { i: i}), math.evaluate(this.yPositionFormula, { i: i}), this.sides, this.minRadius + math.evaluate(this.scaleFormula, { i: i}), this.minAngle + math.evaluate(this.rotationFormula, { i: i}), this.maxAngle))
+            this.polygons.push(
+              this.createPolygon(
+                math.evaluate(this.xPositionFormula, { i: i }),
+                math.evaluate(this.yPositionFormula, { i: i }),
+                this.sides,
+                this.minRadius + math.evaluate(this.scaleFormula, { i: i }),
+                this.minAngle + math.evaluate(this.rotationFormula, { i: i }),
+                this.maxAngle
+              )
+            );
           }
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
       }
     }
+  }
   },
   mounted () {
     this.generatePolygonData()

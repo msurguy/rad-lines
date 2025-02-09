@@ -13,6 +13,7 @@ const icon = (icon, width = '22', height = '22') => ({ icon, width, height })
 export const appState = {
   scaleFormula: currentStateFromQuery.sf || defaultScaleFormula,
   rotationFormula: currentStateFromQuery.rf || defaultRotationFormula,
+  customPath: currentStateFromQuery.customPath || '',
   xPositionFormula:
     currentStateFromQuery.xpos !== undefined
       ? String(currentStateFromQuery.xpos)

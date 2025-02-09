@@ -31,6 +31,12 @@
           <div class="controls">
             <control-group title="Shape">
               <toggle label="Randomize Vertices" v-model="appState.randomize.value"></toggle>
+              <text-input
+                :tooltip="helpStrings.customShape"
+                label="Custom SVG Path"
+                placeholder="M10,10 L50,10 L50,50 L10,50 Z"
+                v-model="appState.customPath">
+              </text-input>
               <slider :left-icon="appState.quantity.leftIcon" :right-icon="appState.quantity.rightIcon" :min="1" :max="100" label="Quantity" v-model.number="appState.quantity.value"></slider>
               <slider :left-icon="appState.sides.leftIcon" :right-icon="appState.sides.rightIcon" :min="3" :max="appState.randomize.value ? 200 : 14" label="Number of Sides" v-model.number="appState.sides.value"></slider>
               <slider :left-icon="appState.radius.leftIcon" :right-icon="appState.radius.rightIcon" :step="1" :min="0" :max="300" label="Min Radius" v-model.number="appState.radius.min"></slider>
@@ -48,6 +54,7 @@
                 </div>
               </transition>
             </control-group>
+
             <control-group title="Line">
               <slider :disabled="!appState.roundness.enabled" :left-icon="appState.roundness.leftIcon" :right-icon="appState.roundness.rightIcon" :step="0.1" :min="-2" :max="2" label="Roundness" v-model.number="appState.roundness.value"></slider>
               <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
@@ -99,7 +106,9 @@
             :roundness="appState.roundness.value"
             :quantity="appState.quantity.value"
             :curve="appState.curve.selected"
-            :randomize="appState.randomize.value">
+            :randomize="appState.randomize.value"
+            :customPath="appState.customPath">
+
           </Polygons>
         </div>
       </div>
