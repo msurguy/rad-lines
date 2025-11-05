@@ -1,0 +1,19 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.popper-content {
+  position: absolute;
+  width: 280px;
+  text-align: left;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+}

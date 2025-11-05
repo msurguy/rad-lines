@@ -1,0 +1,49 @@
+.vc-alpha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.vc-alpha-checkboard-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.vc-alpha-gradient {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+}
+
+.vc-alpha-container {
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  margin: 0 3px;
+}
+
+.vc-alpha-pointer {
+  z-index: 2;
+  position: absolute;
+}
+
+.vc-alpha-picker {
+  cursor: pointer;
+  width: 4px;
+  border-radius: 1px;
+  height: 8px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, .6);
+  background: #fff;
+  margin-top: 1px;
+  transform: translateX(-2px);
+}

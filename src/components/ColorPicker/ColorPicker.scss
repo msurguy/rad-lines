@@ -1,0 +1,133 @@
+.vc-sketch {
+  width: 100%;
+  display: block;
+  padding: 10px 10px 0;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 8px 16px rgba(0, 0, 0, .15);
+}
+
+.vc-sketch-saturation-wrap {
+  width: 100%;
+  padding-bottom: 75%;
+  position: relative;
+  overflow: hidden;
+}
+
+.vc-sketch-controls {
+  display: flex;
+}
+
+.vc-sketch-sliders {
+  padding: 4px 0;
+  flex: 1;
+}
+
+.vc-sketch-hue-wrap {
+  position: relative;
+  height: 20px;
+}
+
+.vc-sketch-alpha-wrap {
+  position: relative;
+  height: 10px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.vc-sketch-color-wrap {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  margin-top: 4px;
+  margin-left: 4px;
+  border-radius: 3px;
+}
+
+.vc-sketch-active-color {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 0 4px rgba(0, 0, 0, .25);
+  z-index: 2;
+}
+
+.vc-sketch-field {
+  display: flex;
+  padding-top: 4px;
+}
+
+.vc-sketch-field--single {
+  flex: 1;
+  padding-left: 6px;
+}
+
+.vc-sketch-field--double {
+  flex: 2;
+}
+
+.vc-sketch-presets {
+  margin-right: -10px;
+  margin-left: -10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.vc-sketch-presets-color {
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  margin: 0 10px 10px 0;
+  vertical-align: top;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+}
+
+.vc-sketch__disable-alpha .vc-sketch-color-wrap {
+  height: 20px;
+}
+
+.color-picker-wrapper {
+  position: relative;
+}
+
+.color-control-label {
+  margin-top: 2px;
+  margin-bottom: 0;
+  align-self: center;
+  flex: 0 0 100px;
+}
+
+.color-picker-button, .color-indicator {
+  margin-top: 5px;
+}
+
+.color-picker-button {
+  margin-left: 10px;
+}
+
+.color-indicator {
+  margin-top: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  display: block;
+  position: relative;
+}
+
+.color-indicator-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.color-control-text-input {
+  display: inline-block;
+  width: 70px;
+  flex: auto;
+}

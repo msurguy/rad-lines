@@ -11,23 +11,20 @@
     "svg": "vsvg -s static -t src/icons  --ext ts --es6"
   },
   "dependencies": {
-    "@vitejs/plugin-vue2": "^2.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "clamp": "^1.0.1",
     "d3": "^7.9.0",
     "lodash.throttle": "^4.1.1",
     "mathjs": "^14.2.1",
     "query-state": "^4.3.0",
     "randoma": "^2.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-ga4": "^2.1.0",
     "sass": "^1.84.0",
     "svg-file-downloader": "^0.0.2",
     "tinycolor2": "^1.6.0",
-    "vite": "^6.1.0",
-    "vue": "^2.7.16",
-    "vue-analytics": "^5.22.1",
-    "vue-gtag": "^1.16.1",
-    "vue-popperjs": "^2.3.0",
-    "vue-svgicon": "^3.3.2",
-    "vue-template-compiler": "^2.7.16"
+    "vite": "^6.1.0"
   },
   "engines": {
     "node": ">= 18.0.0",

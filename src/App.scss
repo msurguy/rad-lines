@@ -1,0 +1,165 @@
+.main-wrapper {
+  min-height: 100vh;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-nav {
+  flex: 1;
+  height: 50px;
+  max-height: 50px;
+  background-color: #ffffff;
+  display: flex;
+  padding-left: 15px;
+  padding-right: 15px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .brand {
+    svg {
+      margin-right: 5px;
+    }
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.46);
+    letter-spacing: 0;
+  }
+}
+
+.more-tools {
+  a {
+    margin-left: 20px;
+    text-decoration: none;
+  }
+}
+
+.page {
+  height: calc(100vh - 50px);
+  position: relative;
+  display: flex;
+}
+
+.controls {
+  background-color: grey;
+  width: 100%;
+  margin-bottom: 55px;
+  position: relative;
+  height: auto;
+}
+
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+}
+
+.download-wrapper {
+  background-color: #393939;
+}
+
+.controls-wrapper {
+  max-height: calc(100vh - 50px);
+  overflow: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.sharing-wrapper {
+  color: #2d2d2d;
+  padding: 10px 0 10px 10px;
+}
+
+.button {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.reveal {
+  pointer-events: none;
+  display: block;
+  height: 5px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgb(47, 47, 47) 100%);
+}
+
+.paper {
+  background-color: #dedede;
+  position: relative;
+  max-height: calc(100vh - 50px);
+  width: calc(100% - 300px);
+  overflow: scroll;
+  padding: 10px;
+  z-index: 1;
+}
+
+.sketch {
+  display: inline-block;
+  border: 6px ridge #ffffff;
+}
+
+.sidebar {
+  z-index: 10;
+  width: 300px;
+  position: relative;
+}
+
+.footer-wrapper {
+  z-index: 1000;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #2d2d2d;
+}
+
+.footer {
+  padding: 15px 15px 0 15px;
+  text-align: right;
+
+  .hide-on-desktop {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-nav {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .nav-more {
+    display: none;
+  }
+  .page {
+    flex-direction: column-reverse;
+    height: auto;
+  }
+
+  .controls-wrapper {
+    max-height: none;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .paper {
+    width: 100%;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .footer-wrapper {
+    position: relative;
+    background-color: #ccc;
+
+    .hide-on-desktop {
+      display: inline-block;
+    }
+  }
+}

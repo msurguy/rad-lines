@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue2';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': '/src',
