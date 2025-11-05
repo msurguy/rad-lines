@@ -12,13 +12,16 @@ const getLocalStorageObject = (key) => {
 }
 
 const ControlGroup = ({ title = '', children }) => {
-  const [isGroupOpened, setIsGroupOpened] = useState(false)
+  const [isGroupOpened, setIsGroupOpened] = useState(true)
 
   useEffect(() => {
     if (title) {
       const state = getLocalStorageObject('collapsibles') || {}
       if (state[title] !== undefined) {
         setIsGroupOpened(state[title])
+      } else {
+        // Default to open if no saved state
+        setIsGroupOpened(true)
       }
     }
   }, [title])
