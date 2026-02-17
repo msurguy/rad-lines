@@ -1,5 +1,5 @@
 <template>
-  <path :stroke="strokeColor" :stroke-width="strokeWidth" fill="none" :d="line"></path>
+  <path :stroke="strokeColor" :stroke-width="strokeWidth" :fill="fill" :d="line"></path>
 </template>
 <script>
 import {
@@ -46,7 +46,8 @@ export default {
     curve: { type: String, default: 'curveCardinalClosed' },
     randomize: { type: Boolean, default: false },
     strokeColor: { type: String, default: '#000000' },
-    strokeWidth: { default: '0.4mm' }
+    strokeWidth: { default: '0.4mm' },
+    fill: { type: String, default: 'none' }
   },
   computed: {
     line() {

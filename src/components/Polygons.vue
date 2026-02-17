@@ -3,7 +3,7 @@
     <rect v-if="paperColorEnabled" :width="width" :height="height" :fill="paperColor"></rect>
     <g :transform="randomize ? `translate(${width/2}, ${height/2})` : false ">
     <desc>pwidth:{{width}};pheight:{{height}};pcolor:{{paperColor}};seed:{{seed}}};sf:{{scaleFormula}};rf:{{rotationFormula}};xf:{{xPositionFormula}};yf:{{yPositionFormula}};qt:{{quantity}};sd:{{sides}};rn:{{roundness}};minrd:{{minRadius}};maxrd:{{maxRadius}};mina:{{minAngle}};maxa:{{maxAngle}};cv:{{curve}};rd:{{randomize}}</desc>
-      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon" :curve="curve" :randomize="randomize" :stroke-width="strokeWidth" :stroke-color="strokeColor"></closed-polyline>
+      <closed-polyline v-for="(polygon, index) in polygons" :roundness="roundness" :key="index" :lineData="polygon.points" :fill="polygon.fill" :curve="curve" :randomize="randomize" :stroke-width="strokeWidth" :stroke-color="strokeColor"></closed-polyline>
     </g>
   </svg>
 </template>
@@ -39,6 +39,19 @@ let transformPoints = (points, scaleIncrement, rotationIncrement) => {
 
 let degreesToRadians = (degrees) => {
   return degrees * (Math.PI / 180)
+}
+
+let lerpColor = (hex1, hex2, t) => {
+  const r1 = parseInt(hex1.slice(1,3), 16), g1 = parseInt(hex1.slice(3,5), 16), b1 = parseInt(hex1.slice(5,7), 16)
+  const a1 = hex1.length > 7 ? parseInt(hex1.slice(7,9), 16) : 255
+  const r2 = parseInt(hex2.slice(1,3), 16), g2 = parseInt(hex2.slice(3,5), 16), b2 = parseInt(hex2.slice(5,7), 16)
+  const a2 = hex2.length > 7 ? parseInt(hex2.slice(7,9), 16) : 255
+  const r = Math.round(r1 + (r2 - r1) * t), g = Math.round(g1 + (g2 - g1) * t), b = Math.round(b1 + (b2 - b1) * t)
+  const a = Math.round(a1 + (a2 - a1) * t)
+  if (a < 255) {
+    return '#' + [r, g, b, a].map(c => c.toString(16).padStart(2, '0')).join('')
+  }
+  return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('')
 }
 
 let getPathPoints = (pathStr, numPoints = 100) => {
@@ -171,6 +184,18 @@ export default {
     seed: {
       type: Number,
       default: 10
+    },
+    fillEnabled: {
+      type: Boolean,
+      default: false
+    },
+    fillStartColor: {
+      type: String,
+      default: '#ff0000'
+    },
+    fillEndColor: {
+      type: String,
+      default: '#0000ff'
     }
   },
   data () {
@@ -240,6 +265,15 @@ export default {
     },
     customPath() {
       this.generatePolygonData();
+    },
+    fillEnabled () {
+      this.generatePolygonData()
+    },
+    fillStartColor () {
+      this.generatePolygonData()
+    },
+    fillEndColor () {
+      this.generatePolygonData()
     }
   },
   methods: {
@@ -259,10 +293,16 @@ export default {
     this.polygons = [];
     math.config({randomSeed: this.seed});
 
+    const getFill = (i) => {
+      if (!this.fillEnabled) return 'none'
+      const t = this.quantity <= 1 ? 0 : i / (this.quantity - 1)
+      return lerpColor(this.fillStartColor, this.fillEndColor, t)
+    }
+
     if (this.customPath && this.customPath.trim() !== "") {
       // Custom path branch:
       const basePoints = getPathPoints(this.customPath, 100); // sample 100 points along the path
-      for (let i = 0; i < this.quantity; i++) {
+      for (let i = this.quantity - 1; i >= 0; i--) {
         try {
           // Evaluate transformation formulas for instance i.
           const scaleVal    = math.evaluate(this.scaleFormula, { i: i });
@@ -272,7 +312,7 @@ export default {
           // Transform the sampled points from the custom path.
           const transformedPoints = transformCustomPathPoints(basePoints, scaleVal, rotationVal, tx, ty);
 
-          this.polygons.push(transformedPoints);
+          this.polygons.push({ points: transformedPoints, fill: getFill(i) });
         } catch (e) {
           console.log(e);
         }
@@ -282,27 +322,29 @@ export default {
       let originalPoints = this.randomize
           ? generatePoints(this.seed, this.maxAngle, this.minRadius, this.maxRadius, this.sides)
           : [];
-      for (let i = 0; i < this.quantity; i++) {
+      for (let i = this.quantity - 1; i >= 0; i--) {
         try {
           if (this.randomize) {
-            this.polygons.push(
-              transformPoints(
+            this.polygons.push({
+              points: transformPoints(
                 originalPoints,
                 math.evaluate(this.scaleFormula, { i: i }),
                 this.minAngle + math.evaluate(this.rotationFormula, { i: i})
-              )
-            );
+              ),
+              fill: getFill(i)
+            });
           } else {
-            this.polygons.push(
-              this.createPolygon(
+            this.polygons.push({
+              points: this.createPolygon(
                 math.evaluate(this.xPositionFormula, { i: i }),
                 math.evaluate(this.yPositionFormula, { i: i }),
                 this.sides,
                 this.minRadius + math.evaluate(this.scaleFormula, { i: i }),
                 this.minAngle + math.evaluate(this.rotationFormula, { i: i }),
                 this.maxAngle
-              )
-            );
+              ),
+              fill: getFill(i)
+            });
           }
         } catch (e) {
           console.log(e);

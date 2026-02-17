@@ -61,6 +61,11 @@ export const appState = {
     min: currentStateFromQuery.minrd || 20,
     max: currentStateFromQuery.maxrd || 50,
   },
+  fill: {
+    enabled: currentStateFromQuery.fe || false,
+    startColor: currentStateFromQuery.fsc || '#ff0000',
+    endColor: currentStateFromQuery.fec || '#0000ff',
+  },
   stroke: {
     color: currentStateFromQuery.scolor || '#000000',
     width:

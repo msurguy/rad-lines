@@ -60,6 +60,13 @@
               <select-field label="Curve Type" v-model="appState.curve.selected" :options="appState.curve.options"></select-field>
               <color-picker :disable-alpha="false" @colorChange="setColor" label="Stroke" v-model="strokeColor"></color-picker>
               <text-input :tooltip="helpStrings.width" label="Width" v-model="appState.stroke.width"></text-input>
+              <toggle label="Fill" v-model="appState.fill.enabled"></toggle>
+              <transition name="slide">
+                <div v-if="appState.fill.enabled">
+                  <color-picker :disable-alpha="false" @colorChange="setFillStartColor" label="Fill Start" v-model="fillStartColor"></color-picker>
+                  <color-picker :disable-alpha="false" @colorChange="setFillEndColor" label="Fill End" v-model="fillEndColor"></color-picker>
+                </div>
+              </transition>
             </control-group>
             <control-group title="Paper">
               <color-picker :show-toggle="true" :toggle-value="bgColorEnabled" :disable-alpha="false" @toggle="toggleBackgroundColor" @colorChange="setBackgroundColor" label="Color" v-model="bgColor"></color-picker>
@@ -107,7 +114,10 @@
             :quantity="appState.quantity.value"
             :curve="appState.curve.selected"
             :randomize="appState.randomize.value"
-            :customPath="appState.customPath">
+            :customPath="appState.customPath"
+            :fill-enabled="appState.fill.enabled"
+            :fill-start-color="appState.fill.startColor"
+            :fill-end-color="appState.fill.endColor">
 
           </Polygons>
         </div>
@@ -169,6 +179,12 @@ export default {
       bgColor: {
         hex: appState.paper.color
       },
+      fillStartColor: {
+        hex: appState.fill.startColor
+      },
+      fillEndColor: {
+        hex: appState.fill.endColor
+      },
       bgColorEnabled: false,
       showMoreTools: false,
       groupToggles: {
@@ -187,6 +203,12 @@ export default {
     },
     setBackgroundColor (value) {
       this.appState.paper.color = value
+    },
+    setFillStartColor (value) {
+      this.appState.fill.startColor = value
+    },
+    setFillEndColor (value) {
+      this.appState.fill.endColor = value
     },
     resetScaleFormula () {
       this.appState.scaleFormula = defaultScaleFormula
@@ -295,6 +317,16 @@ export default {
     },
     'appState.stroke.color' (value) {
       qs.set({scolor: value})
+    },
+    'appState.fill.enabled' (value) {
+      if (value) qs.set({fe: value})
+      else qs.unset('fe')
+    },
+    'appState.fill.startColor' (value) {
+      qs.set({fsc: value})
+    },
+    'appState.fill.endColor' (value) {
+      qs.set({fec: value})
     }
   }
 }
