@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rad Lines has moved &mdash; drawingbots.com</title>
+  <meta name="description" content="Rad Lines now lives at drawingbots.com. This page redirects to the tool's new home.">
+  <link rel="canonical" href="https://drawingbots.com/tools/rad-lines/">
+  <meta name="author" content="Maks Surguy">
+  <meta property="og:title" content="Rad Lines has moved to drawingbots.com">
+  <meta property="og:description" content="Rad Lines now lives at https://drawingbots.com/tools/rad-lines/ along with other free plotter tools.">
+  <meta property="og:url" content="https://drawingbots.com/tools/rad-lines/">
+  <script>
+    /* Returning visitors who already acknowledged the move are redirected
+       before first paint. localStorage is shared across all msurguy.github.io
+       project sites, so the key is namespaced per tool. */
+    try {
+      if (localStorage.getItem('dbc-moved-ack:rad-lines')) {
+        location.replace('https://drawingbots.com/tools/rad-lines/' + location.search);
+      }
+    } catch (e) { }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: Raleway, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #2d2d2d;
+      background-image: radial-gradient(#3a3a3a 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: #c5c5c5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .card {
+      max-width: 520px;
+      width: 100%;
+      background: #202020;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      padding: 40px 36px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, .4);
+    }
+    .eyebrow {
+      color: #ffcc33;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    h1 {
+      color: #f3f3f3;
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    p { margin-bottom: 12px; font-size: 15px; }
+    .new-url {
+      display: block;
+      margin: 18px 0;
+      padding: 10px 14px;
+      background: #2d2d2d;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      color: #ffcc33;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 13px 28px;
+      background: #1c76e1;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    .btn:hover { background: #1560c4; }
+    .fine {
+      margin-top: 22px;
+      margin-bottom: 0;
+      font-size: 13px;
+      color: #9ba3ad;
+    }
+    .fine a { color: #9ba3ad; }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <p class="eyebrow">This tool has moved</p>
+    <h1>Rad Lines is now part of drawingbots.com</h1>
+    <p>Rad Lines is no longer hosted on this page. It now lives at its new permanent home, free to use as always:</p>
+    <a class="new-url" id="new-url" href="https://drawingbots.com/tools/rad-lines/">https://drawingbots.com/tools/rad-lines/</a>
+    <p>Any settings saved in your link will carry over automatically.</p>
+    <a class="btn" id="continue" href="https://drawingbots.com/tools/rad-lines/">I understand &mdash; take me there</a>
+    <p class="fine">You won't be asked again on this device. Update your bookmarks!
+      Explore more free plotter tools at <a href="https://drawingbots.com/tools/">drawingbots.com/tools</a>.</p>
+  </main>
+  <script>
+    (function () {
+      var target = 'https://drawingbots.com/tools/rad-lines/' + location.search;
+      var ack = function () {
+        try { localStorage.setItem('dbc-moved-ack:rad-lines', '1'); } catch (e) { }
+      };
+      var links = [document.getElementById('continue'), document.getElementById('new-url')];
+      for (var i = 0; i < links.length; i++) {
+        links[i].href = target;
+        links[i].addEventListener('click', ack);
+      }
+    })();
+  </script>
+</body>
+
+</html>
